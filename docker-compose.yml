@@ -1,7 +1,8 @@
-version: '3'
+
 services:
   dispatcher:
-    build: ./dispatcher
+    build:
+       context: ./dispatcher
     ports:
       - "3000:3000"
     depends_on:

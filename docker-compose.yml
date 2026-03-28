@@ -5,12 +5,20 @@ services:
        context: ./dispatcher
     ports:
       - "3000:3000"
+    environment:
+      - JWT_SECRET=SECRET
+      - USER_SERVICE_URL=http://user-service:3001
+      - PRODUCT_SERVICE_URL=http://product-service:3002
     depends_on:
       - user-service
       - product-service
 
   user-service:
     build: ./user-service
+    ports:
+      - "3001:3001"
 
   product-service:
     build: ./product-service
+    ports:
+      - "3002:3002"

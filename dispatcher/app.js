@@ -16,7 +16,13 @@ const SERVICES = {
     target: process.env.PRODUCT_SERVICE_URL || 'http://product-service:3002',
     pathRewrite: { '^/products': '' },
     description: 'Ürün Servisi'
+  },
+  auth: {
+    target: process.env.AUTH_SERVICE_URL || 'http://auth-service:3003',
+    pathRewrite: { '^/auth': '' },
+    description: 'Kimlik Doğrulama Servisi'
   }
+
 };
 
 // ─── AUTH MIDDLEWARE ─────────────────────────────────────────────
@@ -26,7 +32,7 @@ function auth(req, res, next) {
   if (!token) return res.status(401).json({ error: 'Token gerekli' });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'SECRET');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || '9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca7');
     req.user = decoded;
     next();
   } catch (err) {

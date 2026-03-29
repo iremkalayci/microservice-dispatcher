@@ -51,8 +51,8 @@ function validatePhone(phone) {
 }
 
 // GET all users (with search, filter and pagination)
-app.get('/', (req, res) => {
-  let result = [...users];
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'UP', service: 'user-service' });
 
   // Search by name or email
   if (req.query.search) {

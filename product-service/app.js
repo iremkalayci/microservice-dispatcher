@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 
@@ -54,8 +55,8 @@ let nextId = 5;
 const VALID_CATEGORIES = ['Elektronik', 'Aksesuar', 'Giyim', 'Ev & Yaşam', 'Spor', 'Kitap', 'Diğer'];
 
 // GET all products (with search, filter and pagination)
-app.get('/', (req, res) => {
-  let result = [...products];
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'UP', service: 'product-service' });
 
   // Search by name or description
   if (req.query.search) {

@@ -1,45 +1,66 @@
+version: '3.8'
+
 services:
   dispatcher:
     build:
       context: ./dispatcher
-      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
-      - JWT_SECRET=SECRET
+      - JWT_SECRET=9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca7
       - USER_SERVICE_URL=http://user-service:3001
       - PRODUCT_SERVICE_URL=http://product-service:3002
+      - AUTH_SERVICE_URL=http://auth-service:3003
     depends_on:
       user-service:
         condition: service_healthy
       product-service:
         condition: service_healthy
+      auth-service:
+        condition: service_started
     restart: unless-stopped
 
   user-service:
     build:
       context: ./user-service
-      dockerfile: Dockerfile
     ports:
       - "3001:3001"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     restart: unless-stopped
 
   product-service:
     build:
       context: ./product-service
-      dockerfile: Dockerfile
     ports:
       - "3002:3002"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3002/"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3002/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     restart: unless-stopped
+
+  auth-service:
+    build:
+      context: ./auth-service
+    ports:
+      - "3003:3003"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/auth_db
+      - JWT_SECRET=9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca7
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

@@ -1,5 +1,8 @@
+require('dotenv').config();
 const app = require('./app');
 
-app.listen(3002, () => {
-  console.log("Product service 3002");
+const port = process.env.PORT || 3002;
+
+app.listen(port, () => {
+  console.log(`Product service ${port} portunda çalışıyor`);
 });

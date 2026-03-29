@@ -1,8 +1,32 @@
-require('dotenv').config();
 const app = require('./app');
 
-const port = process.env.PORT || 3001;
+/**
+ * @class UserServer
+ * @description Kullanıcı yönetim servisini başlatan Bootstrap sınıfı.
+ * OOP prensiplerine (Encapsulation) uygun olarak ağ katmanını yönetir.
+ */
+class UserServer {
+    constructor(appInstance, port) {
+        this.app = appInstance;
+        this.port = port || process.env.PORT || 3001;
+    }
 
-app.listen(port, () => {
-  console.log(`User service ${port} portunda çalışıyor`);
-});
+    /**
+     * @method start
+     * @description Sunucuyu 3001 portunda güvenli bir şekilde ayağa kaldırır.
+     */
+    start() {
+        this.app.listen(this.port, () => {
+            console.log(`-----------------------------------------`);
+            console.log(`USER SERVICE (Profile Management) AKTİF`);
+            console.log(`Dahili Port: ${this.port}`);
+            console.log(`Mod: Mikroservis / OOP / TDD Uyumlu`);
+            console.log(`Başlatılma: ${new Date().toLocaleString('tr-TR')}`);
+            console.log(`-----------------------------------------`);
+        });
+    }
+}
+
+// Servisi 3001 portunda uyandırıyoruz
+const server = new UserServer(app, 3001);
+server.start();

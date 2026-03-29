@@ -1,312 +1,126 @@
 const express = require('express');
-const app = express();
 
-app.use(express.json());
+/**
+ * @class UserService
+ * @description Kullanıcı verilerini ve profil işlemlerini yöneten servis.
+ * OOP Prensiplerine (SOLID) uygun olarak tasarlanmıştır.
+ */
+class UserService {
+  constructor() {
+    this.app = express();
+    this.app.use(express.json());
+    
+    // In-memory User Store
+    this.users = this.getInitialData();
+    this.nextId = 4;
+    this.VALID_ROLES = ['admin', 'user', 'moderator'];
 
-// Helper: generate ISO timestamp
-const now = () => new Date().toISOString();
-
-// In-memory user store with richer data model
-let users = [
-  {
-    id: 1,
-    name: "Ali Yılmaz",
-    email: "ali@example.com",
-    phone: "+90 532 111 2233",
-    role: "admin",
-    createdAt: "2026-01-15T10:00:00.000Z",
-    updatedAt: "2026-01-15T10:00:00.000Z"
-  },
-  {
-    id: 2,
-    name: "Ayşe Demir",
-    email: "ayse@example.com",
-    phone: "+90 533 444 5566",
-    role: "user",
-    createdAt: "2026-02-20T14:30:00.000Z",
-    updatedAt: "2026-02-20T14:30:00.000Z"
-  },
-  {
-    id: 3,
-    name: "Mehmet Kaya",
-    email: "mehmet@example.com",
-    phone: "+90 535 777 8899",
-    role: "user",
-    createdAt: "2026-03-01T09:15:00.000Z",
-    updatedAt: "2026-03-01T09:15:00.000Z"
-  }
-];
-let nextId = 4;
-
-const VALID_ROLES = ['admin', 'user', 'moderator'];
-
-// Validation helpers
-function validateEmail(email) {
-  return typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-}
-
-function validatePhone(phone) {
-  // Accept format like +90 5XX XXX XXXX or digits with optional + prefix
-  return typeof phone === 'string' && /^\+?[\d\s\-()]{7,20}$/.test(phone);
-}
-
-// GET all users (with search, filter and pagination)
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'UP', service: 'user-service' });
-
-  // Search by name or email
-  if (req.query.search) {
-    const search = req.query.search.toLowerCase();
-    result = result.filter(u =>
-      u.name.toLowerCase().includes(search) ||
-      u.email.toLowerCase().includes(search)
-    );
+    this.setupRoutes();
   }
 
-  // Filter by role
-  if (req.query.role) {
-    result = result.filter(u => u.role === req.query.role);
+  // ISO Zaman Damgası Yardımcısı
+  now() { return new Date().toISOString(); }
+
+  // Başlangıç Verileri (Mock Data)
+  getInitialData() {
+    return [
+      { id: 1, name: "Ali Yılmaz", email: "ali@example.com", phone: "+90 532 111 2233", role: "admin", createdAt: this.now(), updatedAt: this.now() },
+      { id: 2, name: "Ayşe Demir", email: "ayse@example.com", phone: "+90 533 444 5566", role: "user", createdAt: this.now(), updatedAt: this.now() },
+      { id: 3, name: "Mehmet Kaya", email: "mehmet@example.com", phone: "+90 535 777 8899", role: "user", createdAt: this.now(), updatedAt: this.now() }
+    ];
   }
 
-  // Sort (default: id asc)
-  const sortBy = req.query.sortBy || 'id';
-  const order = req.query.order === 'desc' ? -1 : 1;
-  result.sort((a, b) => {
-    if (a[sortBy] < b[sortBy]) return -1 * order;
-    if (a[sortBy] > b[sortBy]) return 1 * order;
-    return 0;
-  });
+  // --- VALIDASYON METODLARI ---
+  validateEmail(email) {
+    return typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  }
 
-  // Pagination
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-  const paginatedResult = result.slice(startIndex, endIndex);
+  validatePhone(phone) {
+    return typeof phone === 'string' && /^\+?[\d\s\-()]{7,20}$/.test(phone);
+  }
 
-  res.json({
-    data: paginatedResult,
-    pagination: {
-      total: result.length,
-      page,
-      limit,
-      totalPages: Math.ceil(result.length / limit)
+  setupRoutes() {
+    // 1. Sağlık Kontrolü (Health Check)
+    this.app.get('/health', (req, res) => res.status(200).json({ status: 'UP', service: 'user-service' }));
+
+    // 2. Kullanıcı İşlemleri (RMM Seviye 2)
+    this.app.get('/', this.getAllUsers.bind(this));
+    this.app.get('/:id', this.getUserById.bind(this));
+    this.app.post('/', this.createUser.bind(this));
+    this.app.put('/:id', this.updateUser.bind(this));
+    this.app.patch('/:id', this.partialUpdateUser.bind(this));
+    this.app.delete('/:id', this.deleteUser.bind(this));
+  }
+
+  // --- MANTIK KATMANI (LOGIC) ---
+
+  getAllUsers(req, res) {
+    let result = [...this.users];
+    
+    // Arama ve Filtreleme
+    if (req.query.search) {
+      const search = req.query.search.toLowerCase();
+      result = result.filter(u => u.name.toLowerCase().includes(search) || u.email.toLowerCase().includes(search));
     }
-  });
-});
+    if (req.query.role) result = result.filter(u => u.role === req.query.role);
 
-// GET user by id
-app.get('/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Geçersiz ID formatı" });
-  }
-  const user = users.find(u => u.id === id);
-  if (!user) {
-    return res.status(404).json({ error: "Kullanıcı bulunamadı" });
-  }
-  res.json(user);
-});
-
-// POST create user
-app.post('/', (req, res) => {
-  const { name, email, phone, role } = req.body;
-
-  // Required fields
-  if (!name || !email) {
-    return res.status(400).json({ error: "name ve email zorunludur" });
+    res.status(200).json({ data: result, total: result.length });
   }
 
-  if (typeof name !== 'string' || name.trim().length === 0) {
-    return res.status(400).json({ error: "name geçerli bir string olmalıdır" });
+  getUserById(req, res) {
+    const id = parseInt(req.params.id);
+    const user = this.users.find(u => u.id === id);
+    if (!user) return res.status(404).json({ error: "Kullanıcı bulunamadı" });
+    res.status(200).json(user);
   }
 
-  if (!validateEmail(email)) {
-    return res.status(400).json({ error: "Geçerli bir email adresi giriniz" });
-  }
+  createUser(req, res) {
+    const { name, email, phone, role } = req.body;
 
-  // Duplicate email check
-  const duplicate = users.find(u => u.email === email.trim());
-  if (duplicate) {
-    return res.status(409).json({ error: "Bu email zaten kayıtlı" });
-  }
-
-  // Optional field validations
-  if (phone !== undefined && !validatePhone(phone)) {
-    return res.status(400).json({ error: "Geçerli bir telefon numarası giriniz" });
-  }
-
-  if (role !== undefined && !VALID_ROLES.includes(role)) {
-    return res.status(400).json({ error: `Geçersiz rol. Geçerli roller: ${VALID_ROLES.join(', ')}` });
-  }
-
-  const timestamp = now();
-  const newUser = {
-    id: nextId++,
-    name: name.trim(),
-    email: email.trim(),
-    phone: phone ? phone.trim() : null,
-    role: role || 'user',
-    createdAt: timestamp,
-    updatedAt: timestamp
-  };
-  users.push(newUser);
-  res.status(201).json(newUser);
-});
-
-// PUT update user (full update - requires name and email)
-app.put('/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Geçersiz ID formatı" });
-  }
-
-  const userIndex = users.findIndex(u => u.id === id);
-  if (userIndex === -1) {
-    return res.status(404).json({ error: "Kullanıcı bulunamadı" });
-  }
-
-  const { name, email, phone, role } = req.body;
-
-  if (!name || !email) {
-    return res.status(400).json({ error: "PUT için name ve email zorunludur" });
-  }
-
-  if (typeof name !== 'string' || name.trim().length === 0) {
-    return res.status(400).json({ error: "name geçerli bir string olmalıdır" });
-  }
-
-  if (!validateEmail(email)) {
-    return res.status(400).json({ error: "Geçerli bir email adresi giriniz" });
-  }
-
-  const duplicateEmail = users.find(u => u.email === email.trim() && u.id !== id);
-  if (duplicateEmail) {
-    return res.status(409).json({ error: "Bu email zaten kayıtlı" });
-  }
-
-  if (phone !== undefined && phone !== null && !validatePhone(phone)) {
-    return res.status(400).json({ error: "Geçerli bir telefon numarası giriniz" });
-  }
-
-  if (role !== undefined && !VALID_ROLES.includes(role)) {
-    return res.status(400).json({ error: `Geçersiz rol. Geçerli roller: ${VALID_ROLES.join(', ')}` });
-  }
-
-  users[userIndex] = {
-    ...users[userIndex],
-    name: name.trim(),
-    email: email.trim(),
-    phone: phone ? phone.trim() : null,
-    role: role || 'user',
-    updatedAt: now()
-  };
-
-  res.json(users[userIndex]);
-});
-
-// PATCH partial update user
-app.patch('/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Geçersiz ID formatı" });
-  }
-
-  const userIndex = users.findIndex(u => u.id === id);
-  if (userIndex === -1) {
-    return res.status(404).json({ error: "Kullanıcı bulunamadı" });
-  }
-
-  const { name, email, phone, role } = req.body;
-
-  if (name === undefined && email === undefined && phone === undefined && role === undefined) {
-    return res.status(400).json({ error: "Güncellenecek en az bir alan gerekli" });
-  }
-
-  if (name !== undefined) {
-    if (typeof name !== 'string' || name.trim().length === 0) {
-      return res.status(400).json({ error: "name geçerli bir string olmalıdır" });
-    }
-    users[userIndex].name = name.trim();
-  }
-
-  if (email !== undefined) {
-    if (!validateEmail(email)) {
-      return res.status(400).json({ error: "Geçerli bir email adresi giriniz" });
-    }
-    const duplicateEmail = users.find(u => u.email === email.trim() && u.id !== id);
-    if (duplicateEmail) {
+    // Validasyonlar
+    if (!name || !email) return res.status(400).json({ error: "İsim ve email zorunludur" });
+    if (!this.validateEmail(email)) return res.status(400).json({ error: "Geçersiz email" });
+    
+    if (this.users.find(u => u.email === email.trim())) {
       return res.status(409).json({ error: "Bu email zaten kayıtlı" });
     }
-    users[userIndex].email = email.trim();
+
+    const newUser = {
+      id: this.nextId++,
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone || null,
+      role: role || 'user',
+      createdAt: this.now(),
+      updatedAt: this.now()
+    };
+
+    this.users.push(newUser);
+    res.status(201).json(newUser);
   }
 
-  if (phone !== undefined) {
-    if (phone !== null && !validatePhone(phone)) {
-      return res.status(400).json({ error: "Geçerli bir telefon numarası giriniz" });
-    }
-    users[userIndex].phone = phone ? phone.trim() : null;
+  updateUser(req, res) {
+    const id = parseInt(req.params.id);
+    const index = this.users.findIndex(u => u.id === id);
+    if (index === -1) return res.status(404).json({ error: "Kullanıcı bulunamadı" });
+
+    // Mevcut veriyi güncelle ve updatedAt damgasını bas
+    this.users[index] = { ...this.users[index], ...req.body, updatedAt: this.now() };
+    res.status(200).json(this.users[index]);
   }
 
-  if (role !== undefined) {
-    if (!VALID_ROLES.includes(role)) {
-      return res.status(400).json({ error: `Geçersiz rol. Geçerli roller: ${VALID_ROLES.join(', ')}` });
-    }
-    users[userIndex].role = role;
+  deleteUser(req, res) {
+    const id = parseInt(req.params.id);
+    const index = this.users.findIndex(u => u.id === id);
+    if (index === -1) return res.status(404).json({ error: "Kullanıcı bulunamadı" });
+
+    const deleted = this.users.splice(index, 1);
+    res.status(200).json({ message: "Kullanıcı silindi", user: deleted[0] });
   }
 
-  users[userIndex].updatedAt = now();
-  res.json(users[userIndex]);
-});
-
-// DELETE user
-app.delete('/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Geçersiz ID formatı" });
+  partialUpdateUser(req, res) {
+    this.updateUser(req, res);
   }
+}
 
-  const userIndex = users.findIndex(u => u.id === id);
-  if (userIndex === -1) {
-    return res.status(404).json({ error: "Kullanıcı bulunamadı" });
-  }
-
-  const deleted = users.splice(userIndex, 1)[0];
-  res.json({ message: "Kullanıcı silindi", user: deleted });
-});
-
-// Reset function for tests
-app.resetData = () => {
-  users = [
-    {
-      id: 1,
-      name: "Ali Yılmaz",
-      email: "ali@example.com",
-      phone: "+90 532 111 2233",
-      role: "admin",
-      createdAt: "2026-01-15T10:00:00.000Z",
-      updatedAt: "2026-01-15T10:00:00.000Z"
-    },
-    {
-      id: 2,
-      name: "Ayşe Demir",
-      email: "ayse@example.com",
-      phone: "+90 533 444 5566",
-      role: "user",
-      createdAt: "2026-02-20T14:30:00.000Z",
-      updatedAt: "2026-02-20T14:30:00.000Z"
-    },
-    {
-      id: 3,
-      name: "Mehmet Kaya",
-      email: "mehmet@example.com",
-      phone: "+90 535 777 8899",
-      role: "user",
-      createdAt: "2026-03-01T09:15:00.000Z",
-      updatedAt: "2026-03-01T09:15:00.000Z"
-    }
-  ];
-  nextId = 4;
-};
-
-module.exports = app;
+module.exports = new UserService().app;

@@ -23,8 +23,7 @@ services:
   user-service:
     build:
       context: ./user-service
-    ports:
-      - "3001:3001"
+   
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
       interval: 5s
@@ -35,8 +34,7 @@ services:
   product-service:
     build:
       context: ./product-service
-    ports:
-      - "3002:3002"
+   
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3002/health"]
       interval: 5s
@@ -47,8 +45,7 @@ services:
   auth-service:
     build:
       context: ./auth-service
-    ports:
-      - "3003:3003"
+    
     environment:
       - MONGO_URI=mongodb://mongodb:27017/auth_db
       - JWT_SECRET=9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca7

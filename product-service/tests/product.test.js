@@ -1,8 +1,24 @@
 const request = require('supertest');
+const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../app');
 
-beforeEach(() => {
-  app.resetData();
+let mongoServer;
+
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await app.connectDB(uri);
+});
+
+beforeEach(async () => {
+  await app.resetData();
+});
+
+afterAll(async () => {
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
+  await mongoServer.stop();
 });
 
 describe('Product Service - GET /', () => {
@@ -313,6 +329,7 @@ describe('Product Service - PUT /:id', () => {
 
   it('should update updatedAt timestamp', async () => {
     const before = await request(app).get('/1');
+    await new Promise(r => setTimeout(r, 10));
     const res = await request(app)
       .put('/1')
       .send({ name: 'Updated', price: 20000 });

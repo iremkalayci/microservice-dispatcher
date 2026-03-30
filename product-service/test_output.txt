@@ -1,0 +1,176 @@
+﻿  console.log
+    Product DB: MongoDB ba─şlant─▒s─▒ ba┼şar─▒l─▒.
+
+      at ProductService.log [as connectDB] (app.js:32:15)
+
+  console.log
+    Product DB: Seed data y├╝klendi (4 ├╝r├╝n).
+
+      at ProductService.log [as seedData] (app.js:107:15)
+
+node.exe : PASS tests/produ
+ct.test.js
+At line:1 char:1
++ & "C:\Program Files\nodej
+s/node.exe" "C:\Program Fil
+es\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+    + CategoryInfo         
+     : NotSpecified: (PAS  
+  S tests/product.test.j   
+ s:String) [], RemoteEx    
+ception
+    + FullyQualifiedErrorI 
+   d : NativeCommandError
+ 
+  Product Service - GET /
+    ÔêÜ should return all p
+roducts with pagination (18
+ ms)
+    ÔêÜ should return produ
+cts with correct fields (17
+ ms)
+    ÔêÜ should search produ
+cts by name (12 ms)
+    ÔêÜ should search produ
+cts by description (10 ms)
+    ÔêÜ should filter produ
+cts by category (8 ms)
+    ÔêÜ should filter produ
+cts by min price (8 ms)
+    ÔêÜ should filter produ
+cts by max price (7 ms)
+    ÔêÜ should filter produ
+cts by price range (9 ms)
+    ÔêÜ should filter by st
+ock availability (8 ms)
+    ÔêÜ should paginate res
+ults (8 ms)
+    ÔêÜ should sort by pric
+e descending (8 ms)
+    ÔêÜ should include defa
+ult products (7 ms)
+  Product Service - GET /:i
+d
+    ÔêÜ should return a pro
+duct by valid id (7 ms)
+    ÔêÜ should return 404 f
+or non-existent product (7 
+ms)
+    ÔêÜ should return 400 f
+or invalid id format (strin
+g) (6 ms)
+    ÔêÜ should return 400 f
+or special character id (6 
+ms)
+  Product Service - POST /
+    ÔêÜ should create a new
+ product with all fields (1
+5 ms)
+    ÔêÜ should create a pro
+duct with only required fie
+lds (7 ms)
+    ÔêÜ should return 400 w
+hen name is missing (6 ms)
+    ÔêÜ should return 400 w
+hen price is missing (6 ms)
+    ÔêÜ should return 400 w
+hen body is empty (6 ms)
+    ÔêÜ should return 400 f
+or empty string name (6 ms)
+    ÔêÜ should return 400 f
+or negative price (6 ms)
+    ÔêÜ should return 400 f
+or string price (7 ms)
+    ÔêÜ should return 400 f
+or numeric name (6 ms)
+    ÔêÜ should return 400 f
+or invalid category (5 ms)
+    ÔêÜ should return 400 f
+or negative stock (6 ms)
+    ÔêÜ should return 400 f
+or non-integer stock (7 ms)
+    ÔêÜ should accept zero 
+price (7 ms)
+    ÔêÜ should trim whitesp
+ace from name (7 ms)
+    ÔêÜ should increment id
+ for each new product (9 ms
+)
+  Product Service - PUT /:i
+d
+    ÔêÜ should full-update 
+a product (9 ms)
+    ÔêÜ should return 400 w
+hen name is missing on PUT 
+(7 ms)
+    ÔêÜ should return 400 w
+hen price is missing on PUT
+ (7 ms)
+    ÔêÜ should return 404 f
+or non-existent product (6 
+ms)
+    ÔêÜ should return 400 f
+or invalid id format (6 ms)
+    ÔêÜ should return 400 f
+or negative price on PUT (7
+ ms)
+    ÔêÜ should return 400 f
+or invalid category on PUT 
+(6 ms)
+    ÔêÜ should update updat
+edAt timestamp (29 ms)
+  Product Service - PATCH /
+:id
+    ÔêÜ should partially up
+date product name (7 ms)
+    ÔêÜ should partially up
+date product price (7 ms)
+    ÔêÜ should partially up
+date product stock (7 ms)
+    ÔêÜ should partially up
+date product category (6 ms
+)
+    ÔêÜ should partially up
+date description (8 ms)
+    ÔêÜ should return 400 w
+hen no fields provided (6 m
+s)
+    ÔêÜ should return 404 f
+or non-existent product (6 
+ms)
+    ÔêÜ should return 400 f
+or empty string name (6 ms)
+    ÔêÜ should return 400 f
+or negative price (7 ms)
+    ÔêÜ should return 400 f
+or string price (5 ms)
+    ÔêÜ should return 400 f
+or invalid category (5 ms)
+    ÔêÜ should allow updati
+ng price to zero (6 ms)
+  Product Service - DELETE 
+/:id
+    ÔêÜ should delete an ex
+isting product (8 ms)
+    ÔêÜ should return 404 f
+or non-existent product (6 
+ms)
+    ÔêÜ should return 400 f
+or invalid id format (6 ms)
+    ÔêÜ should reduce produ
+ct count after deletion (8 
+ms)
+    ÔêÜ should not allow de
+leting same product twice (
+7 ms)
+
+Test Suites: 1 passed, 1 to
+tal
+Tests:       56 passed, 56 
+total
+Snapshots:   0 total
+Time:        2.126 s
+Ran all test suites.

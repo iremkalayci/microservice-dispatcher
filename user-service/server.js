@@ -15,12 +15,13 @@ class UserServer {
      * @method start
      * @description Sunucuyu 3001 portunda güvenli bir şekilde ayağa kaldırır.
      */
-    start() {
+    async start() {
+        await this.app.connectDB();
         this.app.listen(this.port, () => {
             console.log(`-----------------------------------------`);
             console.log(`USER SERVICE (Profile Management) AKTİF`);
             console.log(`Dahili Port: ${this.port}`);
-            console.log(`Mod: Mikroservis / OOP / TDD Uyumlu`);
+            console.log(`Veritabanı: MongoDB (user_db)`);
             console.log(`Başlatılma: ${new Date().toLocaleString('tr-TR')}`);
             console.log(`-----------------------------------------`);
         });

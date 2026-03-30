@@ -1,0 +1,143 @@
+﻿  console.log
+    User DB: MongoDB ba─şlant─▒s─▒ ba┼şar─▒l─▒.
+
+      at UserService.log [as connectDB] (app.js:31:15)
+
+  console.log
+    User DB: Seed data y├╝klendi (3 kullan─▒c─▒).
+
+      at UserService.log [as seedData] (app.js:105:15)
+
+node.exe : PASS tests/user.
+test.js
+At line:1 char:1
++ & "C:\Program Files\nodej
+s/node.exe" "C:\Program Fil
+es\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+    + CategoryInfo         
+     : NotSpecified: (PAS  
+  S tests/user.test.js:S   
+ tring) [], RemoteExcep    
+tion
+    + FullyQualifiedErrorI 
+   d : NativeCommandError
+ 
+  User Service - GET /
+    ÔêÜ should return all u
+sers with pagination (18 ms
+)
+    ÔêÜ should return users
+ with correct fields (10 ms
+)
+    ÔêÜ should search users
+ by name (8 ms)
+    ÔêÜ should search users
+ by email (8 ms)
+    ÔêÜ should filter users
+ by role (8 ms)
+    ÔêÜ should paginate res
+ults (8 ms)
+    ÔêÜ should return secon
+d page (7 ms)
+    ÔêÜ should sort users b
+y name descending (7 ms)
+  User Service - GET /:id
+    ÔêÜ should return a use
+r by valid id (7 ms)
+    ÔêÜ should return 404 f
+or non-existent user (6 ms)
+    ÔêÜ should return 400 f
+or invalid id format (strin
+g) (5 ms)
+  User Service - POST /
+    ÔêÜ should create a new
+ user with all fields (17 m
+s)
+    ÔêÜ should create a use
+r with only required fields
+ (7 ms)
+    ÔêÜ should return 400 w
+hen name is missing (5 ms)
+    ÔêÜ should return 400 w
+hen email is missing (5 ms)
+    ÔêÜ should return 400 w
+hen body is empty (6 ms)
+    ÔêÜ should return 400 f
+or empty string name (6 ms)
+    ÔêÜ should return 400 f
+or invalid email (no @) (5 
+ms)
+    ÔêÜ should return 400 f
+or numeric name (6 ms)
+    ÔêÜ should return 409 f
+or duplicate email (6 ms)
+    ÔêÜ should return 400 f
+or invalid role (5 ms)
+    ÔêÜ should return 400 f
+or invalid phone (5 ms)
+    ÔêÜ should trim whitesp
+ace from name and email (8 
+ms)
+  User Service - PUT /:id
+    ÔêÜ should full-update 
+a user (8 ms)
+    ÔêÜ should return 400 w
+hen name is missing on PUT 
+(6 ms)
+    ÔêÜ should return 400 w
+hen email is missing on PUT
+ (5 ms)
+    ÔêÜ should return 404 f
+or non-existent user (6 ms)
+    ÔêÜ should return 400 f
+or invalid id format (5 ms)
+    ÔêÜ should return 409 f
+or duplicate email update (
+6 ms)
+    ÔêÜ should update updat
+edAt timestamp (31 ms)
+  User Service - PATCH /:id
+    ÔêÜ should partially up
+date user name (7 ms)
+    ÔêÜ should partially up
+date user email (6 ms)
+    ÔêÜ should partially up
+date user role (6 ms)
+    ÔêÜ should return 400 w
+hen no fields provided (6 m
+s)
+    ÔêÜ should return 404 f
+or non-existent user (5 ms)
+    ÔêÜ should return 400 f
+or empty string name (6 ms)
+    ÔêÜ should return 400 f
+or invalid email (5 ms)
+    ÔêÜ should return 409 f
+or duplicate email (6 ms)
+    ÔêÜ should return 400 f
+or invalid role (5 ms)
+  User Service - DELETE /:i
+d
+    ÔêÜ should delete an ex
+isting user (8 ms)
+    ÔêÜ should return 404 f
+or non-existent user (5 ms)
+    ÔêÜ should return 400 f
+or invalid id format (5 ms)
+    ÔêÜ should reduce user 
+count after deletion (8 ms)
+    ÔêÜ should not allow de
+leting same user twice (7 m
+s)
+
+Test Suites: 1 passed, 1 to
+tal
+Tests:       44 passed, 44 
+total
+Snapshots:   0 total
+Time:        1.378 s, estim
+ated 2 s
+Ran all test suites.

@@ -23,7 +23,10 @@ services:
   user-service:
     build:
       context: ./user-service
-   
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/user_db
+    depends_on:
+      - mongodb
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
       interval: 5s
@@ -34,7 +37,10 @@ services:
   product-service:
     build:
       context: ./product-service
-   
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/product_db
+    depends_on:
+      - mongodb
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3002/health"]
       interval: 5s

@@ -15,12 +15,13 @@ class ProductServer {
      * @method start
      * @description Sunucuyu güvenli bir şekilde dinlemeye alır.
      */
-    start() {
+    async start() {
+        await this.app.connectDB();
         this.app.listen(this.port, () => {
             console.log(`-----------------------------------------`);
             console.log(`PRODUCT SERVICE (Inventory) AKTİF`);
             console.log(` Dahili Port: ${this.port}`);
-            console.log(` Mod: Mikroservis / OOP`);
+            console.log(` Veritabanı: MongoDB (product_db)`);
             console.log(`Başlatılma: ${new Date().toLocaleString('tr-TR')}`);
             console.log(`-----------------------------------------`);
         });

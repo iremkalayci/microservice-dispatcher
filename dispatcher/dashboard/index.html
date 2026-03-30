@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Microservice Dispatcher API Dashboard - Interactive API documentation and testing tool">
+  <title>Dispatcher API Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Gradient Orbs -->
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+
+  <!-- Header -->
+  <header class="header" id="main-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <path d="M14 2L24 8V20L14 26L4 20V8L14 2Z" stroke="url(#logoGrad)" stroke-width="2" fill="none"/>
+              <circle cx="14" cy="14" r="4" fill="url(#logoGrad)"/>
+              <defs>
+                <linearGradient id="logoGrad" x1="4" y1="2" x2="24" y2="26">
+                  <stop offset="0%" stop-color="#6366f1"/>
+                  <stop offset="100%" stop-color="#a855f7"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="logo-text">
+            <h1>Dispatcher</h1>
+            <span class="version-badge">v1.0.0</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="server-status" id="server-status">
+          <span class="status-dot"></span>
+          <span class="status-text">Checking...</span>
+        </div>
+        <button class="btn-auth" id="btn-auth" onclick="toggleAuthPanel()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0110 0v4"/>
+          </svg>
+          <span>Authorize</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auth Panel (Overlay) -->
+  <div class="auth-overlay" id="auth-overlay" onclick="closeAuthPanel(event)">
+    <div class="auth-panel" id="auth-panel">
+      <div class="auth-header">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0110 0v4"/>
+          </svg>
+          Authorization
+        </h3>
+        <button class="auth-close" onclick="toggleAuthPanel()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="auth-body">
+        <div class="auth-section">
+          <label>JWT Token</label>
+          <p class="auth-description">Protected endpoint'lere erişmek için <code>Authorization</code> header'ında JWT token gönderilmelidir.</p>
+          <div class="auth-input-group">
+            <input type="text" id="jwt-token" placeholder="eyJhbGciOiJIUzI1NiIs..." />
+            <button class="btn-sm btn-primary" onclick="saveToken()">Kaydet</button>
+          </div>
+          <div class="token-status" id="token-status"></div>
+        </div>
+        <div class="auth-section">
+          <label>Hızlı Giriş</label>
+          <p class="auth-description">Auth servisi üzerinden register/login yaparak token alabilirsiniz.</p>
+          <div class="quick-auth-grid">
+            <input type="text" id="auth-username" placeholder="Username" />
+            <input type="password" id="auth-password" placeholder="Password" />
+          </div>
+          <div class="quick-auth-actions">
+            <button class="btn-sm btn-outline" onclick="quickRegister()">Register</button>
+            <button class="btn-sm btn-primary" onclick="quickLogin()">Login & Token Al</button>
+          </div>
+          <div class="quick-auth-result" id="quick-auth-result"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GATEWAY</h4>
+          <a href="#section-dispatcher" class="sidebar-link active" data-section="dispatcher">
+            <span class="service-dot" style="--dot-color: #22d3ee"></span>
+            Dispatcher
+          </a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">MICROSERVICES</h4>
+          <a href="#section-auth" class="sidebar-link" data-section="auth">
+            <span class="service-dot" style="--dot-color: #f59e0b"></span>
+            Auth Service
+          </a>
+          <a href="#section-users" class="sidebar-link" data-section="users">
+            <span class="service-dot" style="--dot-color: #10b981"></span>
+            User Service
+          </a>
+          <a href="#section-products" class="sidebar-link" data-section="products">
+            <span class="service-dot" style="--dot-color: #8b5cf6"></span>
+            Product Service
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Content Area -->
+    <div class="content" id="content">
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <h2>Microservice Dispatcher <span class="gradient-text">API Gateway</span></h2>
+          <p>Express.js tabanlı API Gateway pattern ile çalışan microservice mimarisi. Güvenli routing, JWT authentication ve proxy yönlendirme.</p>
+          <div class="hero-stats">
+            <div class="stat-card">
+              <span class="stat-number">4</span>
+              <span class="stat-label">Servisler</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">16</span>
+              <span class="stat-label">Endpoint</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">3</span>
+              <span class="stat-label">Port</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Architecture Diagram -->
+      <section class="arch-section">
+        <h3 class="section-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          Mimari Genel Bakış
+        </h3>
+        <div class="arch-diagram">
+          <div class="arch-node arch-client">
+            <div class="arch-icon">🌐</div>
+            <div class="arch-label">Client</div>
+          </div>
+          <div class="arch-arrow">
+            <svg width="60" height="24" viewBox="0 0 60 24">
+              <line x1="0" y1="12" x2="50" y2="12" stroke="#6366f1" stroke-width="2" stroke-dasharray="4"/>
+              <polygon points="50,6 60,12 50,18" fill="#6366f1"/>
+            </svg>
+            <span class="arch-arrow-label">:3000</span>
+          </div>
+          <div class="arch-node arch-gateway">
+            <div class="arch-icon">🔀</div>
+            <div class="arch-label">Dispatcher</div>
+            <div class="arch-sublabel">API Gateway</div>
+          </div>
+          <div class="arch-branches">
+            <div class="arch-branch">
+              <div class="arch-arrow-small">
+                <svg width="40" height="24" viewBox="0 0 40 24">
+                  <line x1="0" y1="12" x2="30" y2="12" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4"/>
+                  <polygon points="30,6 40,12 30,18" fill="#f59e0b"/>
+                </svg>
+              </div>
+              <div class="arch-node arch-service" style="--svc-color: #f59e0b">
+                <div class="arch-icon">🔐</div>
+                <div class="arch-label">Auth</div>
+                <div class="arch-sublabel">:3003</div>
+              </div>
+            </div>
+            <div class="arch-branch">
+              <div class="arch-arrow-small">
+                <svg width="40" height="24" viewBox="0 0 40 24">
+                  <line x1="0" y1="12" x2="30" y2="12" stroke="#10b981" stroke-width="2" stroke-dasharray="4"/>
+                  <polygon points="30,6 40,12 30,18" fill="#10b981"/>
+                </svg>
+              </div>
+              <div class="arch-node arch-service" style="--svc-color: #10b981">
+                <div class="arch-icon">👤</div>
+                <div class="arch-label">Users</div>
+                <div class="arch-sublabel">:3001</div>
+              </div>
+            </div>
+            <div class="arch-branch">
+              <div class="arch-arrow-small">
+                <svg width="40" height="24" viewBox="0 0 40 24">
+                  <line x1="0" y1="12" x2="30" y2="12" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="4"/>
+                  <polygon points="30,6 40,12 30,18" fill="#8b5cf6"/>
+                </svg>
+              </div>
+              <div class="arch-node arch-service" style="--svc-color: #8b5cf6">
+                <div class="arch-icon">📦</div>
+                <div class="arch-label">Products</div>
+                <div class="arch-sublabel">:3002</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== DISPATCHER SECTION ==================== -->
+      <section class="api-section" id="section-dispatcher">
+        <div class="section-header">
+          <div class="section-badge" style="--badge-color: #22d3ee">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Gateway
+          </div>
+          <h3 class="section-title">Dispatcher Service</h3>
+          <p class="section-desc">API Gateway — gelen istekleri ilgili servise yönlendirir. Health check ve servis listesi auth gerektirmez.</p>
+        </div>
+
+        <!-- GET /health -->
+        <div class="endpoint-card" id="ep-health">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-health')">
+            <div class="endpoint-info">
+              <span class="method-badge method-get">GET</span>
+              <span class="endpoint-path">/health</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Dispatcher sağlık kontrolü</span>
+              <span class="endpoint-lock"></span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="detail-section">
+                <h5>Açıklama</h5>
+                <p>Dispatcher servisinin çalışıp çalışmadığını kontrol eder. Authentication gerektirmez.</p>
+              </div>
+              <div class="detail-section">
+                <h5>Yanıt Örneği</h5>
+                <div class="response-badge success">200 OK</div>
+                <pre class="code-block"><code>{
+  "status": "ok",
+  "service": "dispatcher",
+  "timestamp": "2026-03-30T18:15:00.000Z"
+}</code></pre>
+              </div>
+              <div class="try-it-section">
+                <button class="btn-try" onclick="tryEndpoint('GET', '/health')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Try it out
+                </button>
+                <div class="try-result" id="result-GET-/health"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GET /services -->
+        <div class="endpoint-card" id="ep-services">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-services')">
+            <div class="endpoint-info">
+              <span class="method-badge method-get">GET</span>
+              <span class="endpoint-path">/services</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Kayıtlı servislerin listesi</span>
+              <span class="endpoint-lock"></span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="detail-section">
+                <h5>Açıklama</h5>
+                <p>Dispatcher'a kayıtlı tüm servisleri listeler. Authentication gerektirmez.</p>
+              </div>
+              <div class="try-it-section">
+                <button class="btn-try" onclick="tryEndpoint('GET', '/services')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Try it out
+                </button>
+                <div class="try-result" id="result-GET-/services"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== AUTH SECTION ==================== -->
+      <section class="api-section" id="section-auth">
+        <div class="section-header">
+          <div class="section-badge" style="--badge-color: #f59e0b">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+            </svg>
+            Auth
+          </div>
+          <h3 class="section-title">Auth Service</h3>
+          <p class="section-desc">Kullanıcı kayıt ve giriş işlemleri. MongoDB + JWT tabanlı kimlik doğrulama. Port: <code>3003</code></p>
+        </div>
+
+        <!-- POST /auth/register -->
+        <div class="endpoint-card" id="ep-auth-register">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-auth-register')">
+            <div class="endpoint-info">
+              <span class="method-badge method-post">POST</span>
+              <span class="endpoint-path">/auth/register</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Yeni kullanıcı kaydı</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="detail-section">
+                <h5>Açıklama</h5>
+                <p>Yeni bir kullanıcı kaydı oluşturur. Şifre bcrypt ile hashlenir ve MongoDB'ye kaydedilir.</p>
+              </div>
+              <div class="detail-section">
+                <h5>Request Body</h5>
+                <div class="params-table">
+                  <div class="param-row">
+                    <span class="param-name">username <span class="param-required">*zorunlu</span></span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Kullanıcı adı (unique)</span>
+                  </div>
+                  <div class="param-row">
+                    <span class="param-name">password <span class="param-required">*zorunlu</span></span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Şifre</span>
+                  </div>
+                </div>
+              </div>
+              <div class="detail-section">
+                <h5>Yanıt Örnekleri</h5>
+                <div class="response-badge success">201 Created</div>
+                <pre class="code-block"><code>{
+  "message": "Kullanıcı başarıyla oluşturuldu."
+}</code></pre>
+                <div class="response-badge error">400 Bad Request</div>
+                <pre class="code-block"><code>{
+  "error": "Kayıt başarısız: ..."
+}</code></pre>
+              </div>
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-body-editor">
+                  <textarea id="body-auth-register" class="body-input" rows="4">{
+  "username": "testuser",
+  "password": "123456"
+}</textarea>
+                </div>
+                <button class="btn-try" onclick="tryEndpoint('POST', '/auth/register', 'body-auth-register')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-POST-/auth/register"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- POST /auth/login -->
+        <div class="endpoint-card" id="ep-auth-login">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-auth-login')">
+            <div class="endpoint-info">
+              <span class="method-badge method-post">POST</span>
+              <span class="endpoint-path">/auth/login</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Kullanıcı girişi — JWT token alın</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="detail-section">
+                <h5>Açıklama</h5>
+                <p>Kayıtlı kullanıcı ile giriş yaparak JWT token alın. Token 1 saat geçerlidir.</p>
+              </div>
+              <div class="detail-section">
+                <h5>Request Body</h5>
+                <div class="params-table">
+                  <div class="param-row">
+                    <span class="param-name">username <span class="param-required">*zorunlu</span></span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Kullanıcı adı</span>
+                  </div>
+                  <div class="param-row">
+                    <span class="param-name">password <span class="param-required">*zorunlu</span></span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Şifre</span>
+                  </div>
+                </div>
+              </div>
+              <div class="detail-section">
+                <h5>Yanıt Örnekleri</h5>
+                <div class="response-badge success">200 OK</div>
+                <pre class="code-block"><code>{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI..."
+}</code></pre>
+                <div class="response-badge error">401 Unauthorized</div>
+                <pre class="code-block"><code>{
+  "error": "Geçersiz kimlik bilgileri"
+}</code></pre>
+              </div>
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-body-editor">
+                  <textarea id="body-auth-login" class="body-input" rows="4">{
+  "username": "testuser",
+  "password": "123456"
+}</textarea>
+                </div>
+                <button class="btn-try" onclick="tryEndpoint('POST', '/auth/login', 'body-auth-login')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-POST-/auth/login"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== USER SERVICE SECTION ==================== -->
+      <section class="api-section" id="section-users">
+        <div class="section-header">
+          <div class="section-badge" style="--badge-color: #10b981">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            Users
+          </div>
+          <h3 class="section-title">User Service</h3>
+          <p class="section-desc">Kullanıcı CRUD işlemleri. Arama, filtreleme ve sayfalama destekler. Port: <code>3001</code> — <span class="lock-icon">🔒</span> JWT gerekli</p>
+        </div>
+
+        <!-- GET /users -->
+        <div class="endpoint-card" id="ep-users-list">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-users-list')">
+            <div class="endpoint-info">
+              <span class="method-badge method-get">GET</span>
+              <span class="endpoint-path">/users</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Tüm kullanıcıları listele</span>
+              <span class="endpoint-lock">🔒</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="detail-section">
+                <h5>Query Parametreleri</h5>
+                <div class="params-table">
+                  <div class="param-row">
+                    <span class="param-name">search</span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">İsim veya email'de arama</span>
+                  </div>
+                  <div class="param-row">
+                    <span class="param-name">role</span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Rol filtresi (admin, user, moderator)</span>
+                  </div>
+                </div>
+              </div>
+              <div class="detail-section">
+                <h5>Yanıt Örneği</h5>
+                <div class="response-badge success">200 OK</div>
+                <pre class="code-block"><code>{
+  "data": [
+    {
+      "id": 1,
+      "name": "Ali Yılmaz",
+      "email": "ali@example.com",
+      "phone": "+90 532 111 2233",
+      "role": "admin",
+      "createdAt": "...",
+      "updatedAt": "..."
+    }
+  ],
+  "total": 3
+}</code></pre>
+              </div>
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-query-params">
+                  <div class="query-param-row">
+                    <label>search</label>
+                    <input type="text" id="q-users-list-search" placeholder="(opsiyonel)" />
+                  </div>
+                  <div class="query-param-row">
+                    <label>role</label>
+                    <select id="q-users-list-role">
+                      <option value="">-- Tümü --</option>
+                      <option value="admin">admin</option>
+                      <option value="user">user</option>
+                      <option value="moderator">moderator</option>
+                    </select>
+                  </div>
+                </div>
+                <button class="btn-try" onclick="tryUsersGet()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-GET-/users"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GET /users/:id -->
+        <div class="endpoint-card" id="ep-users-get">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-users-get')">
+            <div class="endpoint-info">
+              <span class="method-badge method-get">GET</span>
+              <span class="endpoint-path">/users/{id}</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">ID'ye göre kullanıcı getir</span>
+              <span class="endpoint-lock">🔒</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="detail-section">
+                <h5>Path Parametreleri</h5>
+                <div class="params-table">
+                  <div class="param-row">
+                    <span class="param-name">id <span class="param-required">*zorunlu</span></span>
+                    <span class="param-type">integer</span>
+                    <span class="param-desc">Kullanıcı ID</span>
+                  </div>
+                </div>
+              </div>
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-query-params">
+                  <div class="query-param-row">
+                    <label>id</label>
+                    <input type="number" id="q-users-get-id" placeholder="1" value="1"/>
+                  </div>
+                </div>
+                <button class="btn-try" onclick="tryEndpoint('GET', '/users/' + document.getElementById('q-users-get-id').value)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-GET-/users/id"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- POST /users -->
+        <div class="endpoint-card" id="ep-users-create">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-users-create')">
+            <div class="endpoint-info">
+              <span class="method-badge method-post">POST</span>
+              <span class="endpoint-path">/users</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Yeni kullanıcı oluştur</span>
+              <span class="endpoint-lock">🔒</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="detail-section">
+                <h5>Request Body</h5>
+                <div class="params-table">
+                  <div class="param-row">
+                    <span class="param-name">name <span class="param-required">*zorunlu</span></span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Kullanıcı adı</span>
+                  </div>
+                  <div class="param-row">
+                    <span class="param-name">email <span class="param-required">*zorunlu</span></span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Email adresi (unique)</span>
+                  </div>
+                  <div class="param-row">
+                    <span class="param-name">phone</span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Telefon numarası</span>
+                  </div>
+                  <div class="param-row">
+                    <span class="param-name">role</span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Rol (admin, user, moderator). Varsayılan: "user"</span>
+                  </div>
+                </div>
+              </div>
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-body-editor">
+                  <textarea id="body-users-create" class="body-input" rows="6">{
+  "name": "Test Kullanıcı",
+  "email": "test@example.com",
+  "phone": "+90 555 123 4567",
+  "role": "user"
+}</textarea>
+                </div>
+                <button class="btn-try" onclick="tryEndpoint('POST', '/users', 'body-users-create')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-POST-/users"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PUT /users/:id -->
+        <div class="endpoint-card" id="ep-users-update">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-users-update')">
+            <div class="endpoint-info">
+              <span class="method-badge method-put">PUT</span>
+              <span class="endpoint-path">/users/{id}</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Kullanıcıyı tamamen güncelle</span>
+              <span class="endpoint-lock">🔒</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-query-params">
+                  <div class="query-param-row">
+                    <label>id</label>
+                    <input type="number" id="q-users-update-id" placeholder="1" value="1"/>
+                  </div>
+                </div>
+                <div class="try-body-editor">
+                  <textarea id="body-users-update" class="body-input" rows="5">{
+  "name": "Güncellenmiş İsim",
+  "email": "updated@example.com",
+  "role": "admin"
+}</textarea>
+                </div>
+                <button class="btn-try" onclick="tryEndpoint('PUT', '/users/' + document.getElementById('q-users-update-id').value, 'body-users-update')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-PUT-/users/id"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PATCH /users/:id -->
+        <div class="endpoint-card" id="ep-users-patch">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-users-patch')">
+            <div class="endpoint-info">
+              <span class="method-badge method-patch">PATCH</span>
+              <span class="endpoint-path">/users/{id}</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Kullanıcıyı kısmi güncelle</span>
+              <span class="endpoint-lock">🔒</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-query-params">
+                  <div class="query-param-row">
+                    <label>id</label>
+                    <input type="number" id="q-users-patch-id" placeholder="1" value="1"/>
+                  </div>
+                </div>
+                <div class="try-body-editor">
+                  <textarea id="body-users-patch" class="body-input" rows="3">{
+  "phone": "+90 555 999 8888"
+}</textarea>
+                </div>
+                <button class="btn-try" onclick="tryEndpoint('PATCH', '/users/' + document.getElementById('q-users-patch-id').value, 'body-users-patch')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-PATCH-/users/id"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DELETE /users/:id -->
+        <div class="endpoint-card" id="ep-users-delete">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-users-delete')">
+            <div class="endpoint-info">
+              <span class="method-badge method-delete">DELETE</span>
+              <span class="endpoint-path">/users/{id}</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Kullanıcıyı sil</span>
+              <span class="endpoint-lock">🔒</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-query-params">
+                  <div class="query-param-row">
+                    <label>id</label>
+                    <input type="number" id="q-users-delete-id" placeholder="1" value="3"/>
+                  </div>
+                </div>
+                <button class="btn-try btn-danger" onclick="tryEndpoint('DELETE', '/users/' + document.getElementById('q-users-delete-id').value)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-DELETE-/users/id"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PRODUCT SERVICE SECTION ==================== -->
+      <section class="api-section" id="section-products">
+        <div class="section-header">
+          <div class="section-badge" style="--badge-color: #8b5cf6">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+            </svg>
+            Products
+          </div>
+          <h3 class="section-title">Product Service</h3>
+          <p class="section-desc">Ürün envanteri CRUD işlemleri. Arama ve kategori filtresi destekler. Port: <code>3002</code> — <span class="lock-icon">🔒</span> JWT gerekli</p>
+        </div>
+
+        <!-- GET /products -->
+        <div class="endpoint-card" id="ep-products-list">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-products-list')">
+            <div class="endpoint-info">
+              <span class="method-badge method-get">GET</span>
+              <span class="endpoint-path">/products</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Tüm ürünleri listele</span>
+              <span class="endpoint-lock">🔒</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="detail-section">
+                <h5>Query Parametreleri</h5>
+                <div class="params-table">
+                  <div class="param-row">
+                    <span class="param-name">search</span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">İsim veya açıklamada arama</span>
+                  </div>
+                  <div class="param-row">
+                    <span class="param-name">category</span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Kategori filtresi</span>
+                  </div>
+                </div>
+              </div>
+              <div class="detail-section">
+                <h5>Yanıt Örneği</h5>
+                <div class="response-badge success">200 OK</div>
+                <pre class="code-block"><code>{
+  "data": [
+    {
+      "id": 1,
+      "name": "Laptop",
+      "description": "16GB RAM, 512GB SSD",
+      "price": 15000,
+      "category": "Elektronik",
+      "stock": 25,
+      "createdAt": "...",
+      "updatedAt": "..."
+    }
+  ],
+  "total": 2
+}</code></pre>
+              </div>
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-query-params">
+                  <div class="query-param-row">
+                    <label>search</label>
+                    <input type="text" id="q-products-list-search" placeholder="(opsiyonel)" />
+                  </div>
+                  <div class="query-param-row">
+                    <label>category</label>
+                    <select id="q-products-list-category">
+                      <option value="">-- Tümü --</option>
+                      <option value="Elektronik">Elektronik</option>
+                      <option value="Aksesuar">Aksesuar</option>
+                      <option value="Giyim">Giyim</option>
+                      <option value="Ev & Yaşam">Ev & Yaşam</option>
+                      <option value="Spor">Spor</option>
+                      <option value="Kitap">Kitap</option>
+                      <option value="Diğer">Diğer</option>
+                    </select>
+                  </div>
+                </div>
+                <button class="btn-try" onclick="tryProductsGet()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-GET-/products"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GET /products/:id -->
+        <div class="endpoint-card" id="ep-products-get">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-products-get')">
+            <div class="endpoint-info">
+              <span class="method-badge method-get">GET</span>
+              <span class="endpoint-path">/products/{id}</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">ID'ye göre ürün getir</span>
+              <span class="endpoint-lock">🔒</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-query-params">
+                  <div class="query-param-row">
+                    <label>id</label>
+                    <input type="number" id="q-products-get-id" placeholder="1" value="1"/>
+                  </div>
+                </div>
+                <button class="btn-try" onclick="tryEndpoint('GET', '/products/' + document.getElementById('q-products-get-id').value)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-GET-/products/id"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- POST /products -->
+        <div class="endpoint-card" id="ep-products-create">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-products-create')">
+            <div class="endpoint-info">
+              <span class="method-badge method-post">POST</span>
+              <span class="endpoint-path">/products</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Yeni ürün oluştur</span>
+              <span class="endpoint-lock">🔒</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="detail-section">
+                <h5>Request Body</h5>
+                <div class="params-table">
+                  <div class="param-row">
+                    <span class="param-name">name <span class="param-required">*zorunlu</span></span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Ürün adı</span>
+                  </div>
+                  <div class="param-row">
+                    <span class="param-name">price <span class="param-required">*zorunlu</span></span>
+                    <span class="param-type">number</span>
+                    <span class="param-desc">Ürün fiyatı</span>
+                  </div>
+                  <div class="param-row">
+                    <span class="param-name">description</span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Ürün açıklaması</span>
+                  </div>
+                  <div class="param-row">
+                    <span class="param-name">category</span>
+                    <span class="param-type">string</span>
+                    <span class="param-desc">Kategori. Varsayılan: "Diğer"</span>
+                  </div>
+                  <div class="param-row">
+                    <span class="param-name">stock</span>
+                    <span class="param-type">integer</span>
+                    <span class="param-desc">Stok adedi. Varsayılan: 0</span>
+                  </div>
+                </div>
+              </div>
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-body-editor">
+                  <textarea id="body-products-create" class="body-input" rows="7">{
+  "name": "Kulaklık",
+  "description": "Bluetooth, gürültü engelleyici",
+  "price": 2500,
+  "category": "Elektronik",
+  "stock": 50
+}</textarea>
+                </div>
+                <button class="btn-try" onclick="tryEndpoint('POST', '/products', 'body-products-create')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-POST-/products"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PUT /products/:id -->
+        <div class="endpoint-card" id="ep-products-update">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-products-update')">
+            <div class="endpoint-info">
+              <span class="method-badge method-put">PUT</span>
+              <span class="endpoint-path">/products/{id}</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Ürünü tamamen güncelle</span>
+              <span class="endpoint-lock">🔒</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-query-params">
+                  <div class="query-param-row">
+                    <label>id</label>
+                    <input type="number" id="q-products-update-id" placeholder="1" value="1"/>
+                  </div>
+                </div>
+                <div class="try-body-editor">
+                  <textarea id="body-products-update" class="body-input" rows="5">{
+  "name": "Güncel Laptop",
+  "price": 18000,
+  "stock": 30
+}</textarea>
+                </div>
+                <button class="btn-try" onclick="tryEndpoint('PUT', '/products/' + document.getElementById('q-products-update-id').value, 'body-products-update')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-PUT-/products/id"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PATCH /products/:id -->
+        <div class="endpoint-card" id="ep-products-patch">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-products-patch')">
+            <div class="endpoint-info">
+              <span class="method-badge method-patch">PATCH</span>
+              <span class="endpoint-path">/products/{id}</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Ürünü kısmi güncelle</span>
+              <span class="endpoint-lock">🔒</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-query-params">
+                  <div class="query-param-row">
+                    <label>id</label>
+                    <input type="number" id="q-products-patch-id" placeholder="1" value="1"/>
+                  </div>
+                </div>
+                <div class="try-body-editor">
+                  <textarea id="body-products-patch" class="body-input" rows="3">{
+  "stock": 100
+}</textarea>
+                </div>
+                <button class="btn-try" onclick="tryEndpoint('PATCH', '/products/' + document.getElementById('q-products-patch-id').value, 'body-products-patch')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-PATCH-/products/id"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DELETE /products/:id -->
+        <div class="endpoint-card" id="ep-products-delete">
+          <div class="endpoint-header" onclick="toggleEndpoint('ep-products-delete')">
+            <div class="endpoint-info">
+              <span class="method-badge method-delete">DELETE</span>
+              <span class="endpoint-path">/products/{id}</span>
+            </div>
+            <div class="endpoint-meta">
+              <span class="endpoint-desc">Ürünü sil</span>
+              <span class="endpoint-lock">🔒</span>
+              <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="endpoint-body">
+            <div class="endpoint-details">
+              <div class="try-it-section">
+                <h5>Try it out</h5>
+                <div class="try-query-params">
+                  <div class="query-param-row">
+                    <label>id</label>
+                    <input type="number" id="q-products-delete-id" placeholder="1" value="2"/>
+                  </div>
+                </div>
+                <button class="btn-try btn-danger" onclick="tryEndpoint('DELETE', '/products/' + document.getElementById('q-products-delete-id').value)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                  </svg>
+                  Execute
+                </button>
+                <div class="try-result" id="result-DELETE-/products/id"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>Microservice Dispatcher API Dashboard &middot; Built with Express.js &middot; JWT Authentication</p>
+      </footer>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

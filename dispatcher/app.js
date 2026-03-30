@@ -1,6 +1,7 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const jwt = require('jsonwebtoken');
+const path = require('path');
 
 /**
  * @class DispatcherGateway
@@ -54,9 +55,22 @@ class DispatcherGateway {
   }
 
   setupRoutes() {
+    // 0. API Dashboard (Swagger benzeri)
+    this.app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
+
     // 1. Sağlık Kontrolü (Health Check)
     this.app.get('/health', (req, res) => {
       res.status(200).json({ status: 'ok', service: 'dispatcher', timestamp: new Date() });
+    });
+
+    // 1.5 Servis Listesi
+    this.app.get('/services', (req, res) => {
+      const serviceList = Object.entries(this.services).map(([name, config]) => ({
+        name,
+        target: config.target,
+        secure: config.secure
+      }));
+      res.status(200).json({ services: serviceList });
     });
 
     // 2. Dinamik Proxy Yönlendirmesi

@@ -1,5 +1,6 @@
 const request = require('supertest');
-const dispatcher = require('./app'); // Az önce oluşturduğumuz sınıf
+const dispatcher = require('./app'); 
+const { app, auth, SERVICES } = require('./app');
 
 describe('Dispatcher TDD Tests', () => {
     it('Bilet (Token) olmadan /users servisine erişilememeli', async () => {

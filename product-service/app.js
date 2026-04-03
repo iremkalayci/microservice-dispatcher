@@ -26,7 +26,7 @@ class ProductService {
 
   // --- VERİTABANI BAĞLANTISI ---
   async connectDB(uri) {
-    const mongoUri = uri || process.env.MONGO_URI || 'mongodb://mongodb:27017/product_db';
+    const mongoUri = uri || process.env.MONGO_URI || 'mongodb://product-db:27017/product_db';
     try {
       await mongoose.connect(mongoUri);
       console.log('Product DB: MongoDB bağlantısı başarılı.');

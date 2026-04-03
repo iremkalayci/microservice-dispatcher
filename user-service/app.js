@@ -25,7 +25,7 @@ class UserService {
 
   // --- VERİTABANI BAĞLANTISI ---
   async connectDB(uri) {
-    const mongoUri = uri || process.env.MONGO_URI || 'mongodb://mongodb:27017/user_db';
+    const mongoUri = uri || process.env.MONGO_URI || 'mongodb://user-db:27017/user_db';
     try {
       await mongoose.connect(mongoUri);
       console.log('User DB: MongoDB bağlantısı başarılı.');

@@ -73,5 +73,4 @@ class AuthServiceApp {
   }
 }
 
-// Sadece Express instance'ını dışa aktarıyoruz (Server.js ve Testler için)
 module.exports = new AuthServiceApp().app;

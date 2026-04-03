@@ -1,69 +1,51 @@
-version: '3.8'
-
 services:
+  # --- VERİTABANLARI ---
+  dispatcher-db:
+    image: mongo:latest
+    container_name: dispatcher-db
+    ports:
+      - "27021:27017"
+    networks:
+      - backend-network
+
+  auth-db:
+    image: mongo:latest
+    container_name: auth-db
+    ports:
+      - "27019:27017"
+    networks:
+      - backend-network
+
+  # --- SERVİSLER ---
   dispatcher:
-    build:
-      context: ./dispatcher
+    build: ./dispatcher
+    container_name: dispatcher
     ports:
       - "3000:3000"
     environment:
-      - JWT_SECRET=9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca7
-      - USER_SERVICE_URL=http://user-service:3001
-      - PRODUCT_SERVICE_URL=http://product-service:3002
+      - DISPATCHER_DB_URI=mongodb://dispatcher-db:27017/dispatcher_db
       - AUTH_SERVICE_URL=http://auth-service:3003
+      - USER_SERVICE_URL=http://user-service:3002
+      - PRODUCT_SERVICE_URL=http://product-service:3005
+      - ORDER_SERVICE_URL=http://order-service:3004
+      - JWT_SECRET=irem_secret_key
     depends_on:
-      user-service:
-        condition: service_healthy
-      product-service:
-        condition: service_healthy
-      auth-service:
-        condition: service_started
-    restart: unless-stopped
-
-  user-service:
-    build:
-      context: ./user-service
-    environment:
-      - MONGO_URI=mongodb://mongodb:27017/user_db
-    depends_on:
-      - mongodb
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-    restart: unless-stopped
-
-  product-service:
-    build:
-      context: ./product-service
-    environment:
-      - MONGO_URI=mongodb://mongodb:27017/product_db
-    depends_on:
-      - mongodb
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3002/health"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-    restart: unless-stopped
+      - dispatcher-db
+    networks:
+      - backend-network
 
   auth-service:
-    build:
-      context: ./auth-service
-    
+    build: ./auth-service
+    container_name: auth-service
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/auth_db
-      - JWT_SECRET=9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca7
+      - MONGO_URI=mongodb://auth-db:27017/auth_db
+      - PORT=3003
     depends_on:
-      - mongodb
+      - auth-db
+    networks:
+      - backend-network
 
-  mongodb:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
-volumes:
-  mongo_data:
+# --- İŞTE EKSİK OLAN VE HATAYA SEBEP OLAN KISIM BURASI ---
+networks:
+  backend-network:
+    driver: bridge

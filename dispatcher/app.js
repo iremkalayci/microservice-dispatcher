@@ -71,7 +71,7 @@ class DispatcherGateway {
                 
                 // --- 3. LOGLARI KENDİ DB'SİNE KAYDETME ---
                 // EKLENDİ: /api/logs isteklerini loglama ki sonsuz döngü olmasın
-                if (!req.path.includes('/api/logs') && !req.path.includes('/dashboard')) {
+                if (process.env.NODE_ENV !== 'test' && !req.path.includes('/api/logs') && !req.path.includes('/dashboard')) {
                     try {
                         await this.LogModel.create({
                             method: req.method,
@@ -83,7 +83,9 @@ class DispatcherGateway {
                     } catch (e) { console.error("Log kaydedilemedi ❌", e.message); }
                 }
 
-                console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} → ${res.statusCode} (${duration}ms)`);
+                if (process.env.NODE_ENV !== 'test') {
+                    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} → ${res.statusCode} (${duration}ms)`);
+                }
             });
             next();
         });

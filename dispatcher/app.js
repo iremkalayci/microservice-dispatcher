@@ -33,13 +33,13 @@ class DispatcherGateway {
 
         this.SERVICES = {
             users: { 
-                target: process.env.USER_SERVICE_URL || 'http://user-service:3002', 
+                target: process.env.USER_SERVICE_URL || 'http://user-service:3001', 
                 secure: true, 
                 description: 'User Management Service', 
                 pathRewrite: { '^/users': '' } 
             },
             products: { 
-                target: process.env.PRODUCT_SERVICE_URL || 'http://product-service:3005', 
+                target: process.env.PRODUCT_SERVICE_URL || 'http://product-service:3002', 
                 secure: true, 
                 description: 'Product Catalog Service', 
                 pathRewrite: { '^/products': '' } 
@@ -90,7 +90,7 @@ class DispatcherGateway {
     }
 
     authenticate = (req, res, next) => {
-        const authHeader = req.headers['authorization'];
+        const authHeader = req.headers['authorization'] || req.headers['Authorization'] || (req.get && req.get('Authorization'));
         if (!authHeader) return res.status(401).json({ error: 'Token gerekli' });
 
         const parts = authHeader.split(' ');
@@ -120,7 +120,13 @@ class DispatcherGateway {
         });
 
         this.app.get('/health', (req, res) => {
-            res.status(200).json({ status: 'ok', service: 'dispatcher', uptime: process.uptime() });
+            const routes = Object.keys(this.SERVICES).map(r => ({ path: `/${r}` }));
+            res.status(200).json({ status: 'ok', service: 'dispatcher', uptime: process.uptime(), timestamp: Date.now(), routes });
+        });
+
+        this.app.get('/services', (req, res) => {
+            const services = Object.entries(this.SERVICES).map(([path, config]) => ({ route: `/${path}`, target: config.target, description: config.description }));
+            res.status(200).json({ services });
         });
 
         // Proxy Yönlendirmeleri
@@ -145,10 +151,18 @@ class DispatcherGateway {
         });
 
         this.app.use((req, res) => {
-            res.status(404).json({ error: 'Route bulunamadı', path: req.originalUrl });
+            res.status(404).json({ 
+                error: 'Route bulunamadı', 
+                path: req.originalUrl,
+                availableRoutes: ['/health', '/services', ...Object.keys(this.SERVICES).map(s => `/${s}`)]
+            });
         });
     }
 }
 
 const gateway = new DispatcherGateway();
-module.exports = gateway.app;
+module.exports = { 
+    app: gateway.app, 
+    auth: gateway.authenticate.bind(gateway), 
+    SERVICES: gateway.SERVICES 
+};

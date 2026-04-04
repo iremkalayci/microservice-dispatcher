@@ -128,6 +128,7 @@
         </div>
       </nav>
     </aside>
+    
 
     <!-- Content Area -->
     <div class="content" id="content">
@@ -919,7 +920,7 @@
             </div>
           </div>
         </div>
-
+    
         <!-- POST /products -->
         <div class="endpoint-card" id="ep-products-create">
           <div class="endpoint-header" onclick="toggleEndpoint('ep-products-create')">
@@ -1113,14 +1114,62 @@
           </div>
         </div>
       </section>
-
-      <!-- Footer -->
-      <footer class="footer">
-        <p>Microservice Dispatcher API Dashboard &middot; Built with Express.js &middot; JWT Authentication</p>
-      </footer>
+    <section class="api-section log-container-fluid" id="section-performance" style="margin-bottom: 2rem;">
+  <div class="section-header">
+    <div class="section-badge" style="--badge-color: #03dac6">
+      Performance Metrics
     </div>
-  </main>
+    <h3 class="section-title">Sistem Yük ve Stres Analizi</h3>
+    <p class="section-desc">Locust ile simüle edilen trafik altında performans verileri.</p>
+  </div>
 
-  <script src="app.js"></script>
-</body>
-</html>
+  <div class="log-section" style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+    <div class="card">
+      <span>MAX USERS</span>
+      <h2>500 VU</h2>
+    </div>
+    <div class="card">
+      <span>AVG RESP.</span>
+      <h2>12ms</h2>
+    </div>
+    <div class="card">
+      <span>ERR RATE</span>
+      <h2>%0.0</h2>
+    </div>
+    <div>
+      <a href="locust_report.html" target="_blank" class="btn">
+        GRAFİK ANALİZİNİ AÇ
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="api-section log-container-fluid" id="section-logs">
+  <div class="section-header">
+    <div class="section-badge" style="--badge-color: #bb86fc">
+      Monitoring
+    </div>
+    <h3 class="section-title">Dispatcher Trafik Logları</h3>
+    <p class="section-desc">Gateway logları anlık çekiliyor.</p>
+  </div>
+
+  <div class="log-section">
+    <div class="table-responsive">
+      <table id="logTable">
+        <thead>
+          <tr>
+            <th>METOD</th>
+            <th>ENDPOINT</th>
+            <th>DURUM</th>
+            <th>SÜRE</th>
+            <th>ZAMAN</th>
+          </tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SCRIPT EN AŞAĞIDA -->
+<script src="app.js"></script>

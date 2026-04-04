@@ -18,15 +18,15 @@ class DispatcherServer {
     start() {
         this.app.listen(this.port, () => {
             console.log(`=========================================`);
-            console.log(`DISPATCHER (API GATEWAY) AKTİF`);
-            console.log(` Giriş Noktası: http://localhost:${this.port}`);
-            console.log(` Durum: TDD Onaylı & OOP Yapılandırıldı`);
-            console.log(`Başlatılma: ${new Date().toLocaleString('tr-TR')}`);
+            console.log(`DISPATCHER (API GATEWAY) AKTIF`);
+            console.log(`Giris Noktasi: http://localhost:${this.port}`);
+            console.log(`Durum: TDD Onayli & OOP Yapilandirildi`);
+            console.log(`Baslatilma: ${new Date().toLocaleString('tr-TR')}`);
             console.log(`=========================================`);
         });
     }
 }
 
-// Dispatcher'ı 3000 portunda uyandırıyoruz
+// Dispatcher'i 3000 portunda uyandiriyoruz
 const server = new DispatcherServer(app, 3000);
 server.start();

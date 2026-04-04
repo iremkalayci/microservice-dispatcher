@@ -424,3 +424,38 @@ document.addEventListener('keydown', (e) => {
     }
   }
 });
+async function refreshLogs() {
+    try {
+        const response = await fetch('http://localhost:3000/api/logs'); // Dispatcher'daki log endpoint'in
+        const logs = await response.json();
+        const tableBody = document.getElementById('logBody');
+        
+        if (!tableBody) return;
+        tableBody.innerHTML = ''; 
+
+        logs.forEach(log => {
+            const statusColor = log.statusCode < 400 ? '#98c379' : '#e06c75';
+            const statusBg = log.statusCode < 400 ? 'rgba(152, 195, 121, 0.1)' : 'rgba(224, 108, 117, 0.1)';
+            
+            const row = `<tr>
+                <td class="method-${log.method.toLowerCase()}">${log.method}</td>
+                <td style="color: #abb2bf; font-family: 'JetBrains Mono'">${log.endpoint}</td>
+                <td>
+                    <span class="status-badge" style="background:${statusBg}; color:${statusColor}; border: 1px solid ${statusColor}44">
+                        ${log.statusCode}
+                    </span>
+                </td>
+                <td style="color: #c678dd">${log.responseTime} ms</td>
+                <td style="color: #5c6370">${new Date(log.timestamp).toLocaleTimeString()}</td>
+            </tr>`;
+            tableBody.innerHTML += row;
+        });
+    } catch (err) {
+        console.error("Log hatası:", err);
+    }
+}
+
+// 5 saniyede bir güncelle
+setInterval(refreshLogs, 5000);
+refreshLogs();
+

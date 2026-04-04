@@ -4,10 +4,15 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const mongoose = require('mongoose'); // Mükemmel izolasyon için eklendi
 
+
 class DispatcherGateway {
     constructor() {
         this.app = express();
         this.secret = process.env.JWT_SECRET || 'irem_secret_key';
+        
+        // EKLENDİ: CORS ve JSON Parsing
+      
+        this.app.use(express.json());
         
         // --- 1. DISPATCHER ÖZEL VERİTABANI BAĞLANTISI ---
         const mongoUri = process.env.DISPATCHER_DB_URI || 'mongodb://dispatcher-db:27017/dispatcher_db';
@@ -16,14 +21,15 @@ class DispatcherGateway {
             .catch(err => console.error("Dispatcher DB Bağlantı Hatası ❌:", err));
 
         // --- 2. LOG ŞEMASI (İster 4.2 & 4.3 Uyumu) ---
+        // GÜNCELLENDİ: Koleksiyon ismi 'trafficlogs' olarak sabitlendi ve alanlar Dashboard'a uygun hale getirildi
         this.LogModel = mongoose.model('TrafficLog', new mongoose.Schema({
             method: String,
-            path: String,
-            status: Number,
-            duration: Number,
+            endpoint: String, // 'path' yerine 'endpoint' yapıldı (Dashboard ile uyum için)
+            statusCode: Number, // 'status' yerine 'statusCode' yapıldı
+            responseTime: Number, // 'duration' yerine 'responseTime' yapıldı
             timestamp: { type: Date, default: Date.now },
             clientIp: String
-        }));
+        }, { collection: 'trafficlogs' }));
 
         this.SERVICES = {
             users: { 
@@ -64,15 +70,18 @@ class DispatcherGateway {
                 const duration = Date.now() - start;
                 
                 // --- 3. LOGLARI KENDİ DB'SİNE KAYDETME ---
-                try {
-                    await this.LogModel.create({
-                        method: req.method,
-                        path: req.originalUrl,
-                        status: res.statusCode,
-                        duration: duration,
-                        clientIp: req.ip
-                    });
-                } catch (e) { console.error("Log kaydedilemedi ❌"); }
+                // EKLENDİ: /api/logs isteklerini loglama ki sonsuz döngü olmasın
+                if (!req.path.includes('/api/logs') && !req.path.includes('/dashboard')) {
+                    try {
+                        await this.LogModel.create({
+                            method: req.method,
+                            endpoint: req.originalUrl,
+                            statusCode: res.statusCode,
+                            responseTime: duration,
+                            clientIp: req.ip
+                        });
+                    } catch (e) { console.error("Log kaydedilemedi ❌", e.message); }
+                }
 
                 console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} → ${res.statusCode} (${duration}ms)`);
             });
@@ -100,9 +109,14 @@ class DispatcherGateway {
         this.app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
 
         // --- 4. ARAYÜZ İÇİN CANLI LOG ENDPOINT ---
-        this.app.get('/dispatcher/logs', async (req, res) => {
-            const logs = await this.LogModel.find().sort({ timestamp: -1 }).limit(50);
-            res.json(logs);
+        // GÜNCELLENDİ: '/dispatcher/logs' yerine Dashboard'un beklediği '/api/logs' yapıldı
+        this.app.get('/api/logs', async (req, res) => {
+            try {
+                const logs = await this.LogModel.find().sort({ timestamp: -1 }).limit(50);
+                res.json(logs);
+            } catch (err) {
+                res.status(500).json({ error: "Loglar getirilemedi" });
+            }
         });
 
         this.app.get('/health', (req, res) => {

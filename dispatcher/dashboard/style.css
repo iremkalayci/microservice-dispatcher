@@ -1380,3 +1380,54 @@ body {
     flex-direction: column;
   }
 }
+.log-container-fluid {
+    margin-top: 40px;
+    padding-bottom: 40px;
+}
+
+.log-section {
+    background: rgba(30, 30, 46, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+#logTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Inter', sans-serif;
+}
+
+#logTable th {
+    background: rgba(37, 37, 57, 0.8);
+    color: #03dac6;
+    padding: 16px;
+    text-align: left;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#logTable td {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 13px;
+}
+
+#logTable tr:hover {
+    background: rgba(187, 134, 252, 0.05);
+}
+
+.method-get { color: #61afef; font-weight: 800; }
+.method-post { color: #98c379; font-weight: 800; }
+.method-put { color: #e5c07b; font-weight: 800; }
+.method-delete { color: #e06c75; font-weight: 800; }
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 11px;
+}

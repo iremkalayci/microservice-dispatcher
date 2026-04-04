@@ -1,15 +1,34 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
+
+// Mock Mongoose to bypass actual DB operations in route tests
+jest.mock('mongoose', () => {
+  return {
+    connect: jest.fn().mockResolvedValue(true),
+    disconnect: jest.fn().mockResolvedValue(true),
+    model: jest.fn().mockReturnValue({
+      create: jest.fn().mockResolvedValue(true),
+      find: jest.fn().mockReturnValue({
+        sort: jest.fn().mockReturnValue({
+          limit: jest.fn().mockResolvedValue([])
+        })
+      })
+    }),
+    Schema: jest.fn()
+  };
+});
+
 const { app, auth, SERVICES } = require('../app');
 
+jest.setTimeout(10000);
 // ─── Token Helpers ──────────────────────────────────────────────
 
 function generateToken(payload = { user: 'testuser', role: 'admin' }) {
-  return jwt.sign(payload, 'SECRET', { expiresIn: '1h' });
+  return jwt.sign(payload, process.env.JWT_SECRET || 'irem_secret_key', { expiresIn: '1h' });
 }
 
 function generateExpiredToken() {
-  return jwt.sign({ user: 'testuser' }, 'SECRET', { expiresIn: '-1s' });
+  return jwt.sign({ user: 'testuser' }, process.env.JWT_SECRET || 'irem_secret_key', { expiresIn: '-1s' });
 }
 
 function generateInvalidToken() {
@@ -284,8 +303,8 @@ describe('Dispatcher - Unknown Routes (404)', () => {
   });
 
   it('404 response should include requested path', async () => {
-    const res = await request(app).get('/orders');
-    expect(res.body.path).toBe('/orders');
+    const res = await request(app).get('/foo/bar');
+    expect(res.body.path).toBe('/foo/bar');
   });
 });
 

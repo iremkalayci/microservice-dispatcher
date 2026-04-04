@@ -18,8 +18,8 @@ class AuthServiceApp {
     this.setupRoutes();
   }
 
-  // 4.2 Teknik İsteri: Gerçek bir NoSQL (MongoDB) motoru kullanımı
   async connectDB() {
+    if (process.env.NODE_ENV === 'test') return;
     const mongoUri = process.env.MONGO_URI || 'mongodb://mongodb:27017/auth_db';
     try {
       await mongoose.connect(mongoUri);

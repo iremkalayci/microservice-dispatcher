@@ -16,10 +16,11 @@ class DispatcherGateway {
         
         // --- 1. DISPATCHER ÖZEL VERİTABANI BAĞLANTISI ---
         const mongoUri = process.env.DISPATCHER_DB_URI || 'mongodb://dispatcher-db:27017/dispatcher_db';
-        mongoose.connect(mongoUri)
-            .then(() => console.log("Dispatcher Özel DB Bağlantısı Başarılı ✅"))
-            .catch(err => console.error("Dispatcher DB Bağlantı Hatası ❌:", err));
-
+        if (process.env.NODE_ENV !== 'test') {
+            mongoose.connect(mongoUri)
+                .then(() => console.log("Dispatcher Özel DB Bağlantısı Başarılı ✅"))
+                .catch(err => console.error("Dispatcher DB Bağlantı Hatası ❌:", err));
+        }
         // --- 2. LOG ŞEMASI (İster 4.2 & 4.3 Uyumu) ---
         // GÜNCELLENDİ: Koleksiyon ismi 'trafficlogs' olarak sabitlendi ve alanlar Dashboard'a uygun hale getirildi
         this.LogModel = mongoose.model('TrafficLog', new mongoose.Schema({

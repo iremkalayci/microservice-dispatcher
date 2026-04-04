@@ -1157,13 +1157,147 @@
           <div class="endpoint-details">
             <div class="try-it-section">
               <h5>Try it out</h5>
-              <textarea id="body-orders-create" class="body-input" rows="4">{
-  "productId": 1,
+              <textarea id="body-orders-create" class="body-input" rows="6">{
+  "userId": "user123",
+  "productId": "prod456",
   "quantity": 2,
-  "totalPrice": 1500
+  "status": "Hazırlanıyor"
 }</textarea>
               <button class="btn-try" onclick="tryEndpoint('POST', '/orders', 'body-orders-create')">Execute</button>
               <div class="try-result" id="result-POST-/orders"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GET /orders -->
+      <div class="endpoint-card" id="ep-orders-get-all">
+        <div class="endpoint-header" onclick="toggleEndpoint('ep-orders-get-all')">
+          <div class="endpoint-info">
+            <span class="method-badge method-get">GET</span>
+            <span class="endpoint-path">/orders</span>
+          </div>
+          <div class="endpoint-meta">
+            <span class="endpoint-desc">Tüm siparişleri listele</span>
+            <span class="endpoint-lock"></span>
+            <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="endpoint-body">
+          <div class="endpoint-details">
+            <div class="try-it-section">
+              <h5>Try it out</h5>
+              <button class="btn-try" onclick="tryEndpoint('GET', '/orders')">Execute</button>
+              <div class="try-result" id="result-GET-/orders"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GET /orders/:id -->
+      <div class="endpoint-card" id="ep-orders-get-id">
+        <div class="endpoint-header" onclick="toggleEndpoint('ep-orders-get-id')">
+          <div class="endpoint-info">
+            <span class="method-badge method-get">GET</span>
+            <span class="endpoint-path">/orders/{id}</span>
+          </div>
+          <div class="endpoint-meta">
+            <span class="endpoint-desc">ID'ye göre sipariş getir</span>
+            <span class="endpoint-lock"></span>
+            <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="endpoint-body">
+          <div class="endpoint-details">
+            <div class="try-it-section">
+              <h5>Try it out</h5>
+              <div class="try-query-params">
+                <div class="query-param-row">
+                  <label>id</label>
+                  <input type="text" id="q-orders-get-id" placeholder="MongoDB ObjectId girin..."/>
+                </div>
+              </div>
+              <button class="btn-try" onclick="tryEndpoint('GET', '/orders/' + document.getElementById('q-orders-get-id').value)">Execute</button>
+              <div class="try-result" id="result-GET-/orders/id"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PUT /orders/:id -->
+      <div class="endpoint-card" id="ep-orders-update">
+        <div class="endpoint-header" onclick="toggleEndpoint('ep-orders-update')">
+          <div class="endpoint-info">
+            <span class="method-badge method-put">PUT</span>
+            <span class="endpoint-path">/orders/{id}</span>
+          </div>
+          <div class="endpoint-meta">
+            <span class="endpoint-desc">Sipariş güncelle</span>
+            <span class="endpoint-lock"></span>
+            <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="endpoint-body">
+          <div class="endpoint-details">
+            <div class="try-it-section">
+              <h5>Try it out</h5>
+              <div class="try-query-params">
+                <div class="query-param-row">
+                  <label>id</label>
+                  <input type="text" id="q-orders-put-id" placeholder="MongoDB ObjectId girin..."/>
+                </div>
+              </div>
+              <textarea id="body-orders-update" class="body-input" rows="6">{
+  "userId": "user123",
+  "productId": "prod456",
+  "quantity": 3,
+  "status": "Kargoya Verildi"
+}</textarea>
+              <button class="btn-try" onclick="tryEndpoint('PUT', '/orders/' + document.getElementById('q-orders-put-id').value, 'body-orders-update')">Execute</button>
+              <div class="try-result" id="result-PUT-/orders/id"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DELETE /orders/:id -->
+      <div class="endpoint-card" id="ep-orders-delete">
+        <div class="endpoint-header" onclick="toggleEndpoint('ep-orders-delete')">
+          <div class="endpoint-info">
+            <span class="method-badge method-delete">DELETE</span>
+            <span class="endpoint-path">/orders/{id}</span>
+          </div>
+          <div class="endpoint-meta">
+            <span class="endpoint-desc">Sipariş sil</span>
+            <span class="endpoint-lock"></span>
+            <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="endpoint-body">
+          <div class="endpoint-details">
+            <div class="try-it-section">
+              <h5>Try it out</h5>
+              <div class="try-query-params">
+                <div class="query-param-row">
+                  <label>id</label>
+                  <input type="text" id="q-orders-delete-id" placeholder="MongoDB ObjectId girin..."/>
+                </div>
+              </div>
+              <button class="btn-try btn-danger" onclick="tryEndpoint('DELETE', '/orders/' + document.getElementById('q-orders-delete-id').value)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                </svg>
+                Execute
+              </button>
+              <div class="try-result" id="result-DELETE-/orders/id"></div>
             </div>
           </div>
         </div>
@@ -1190,6 +1324,26 @@
           <h4>İstek Süreleri (Trend)</h4>
           <div class="chart-container">
             <canvas id="timeChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem; margin-bottom:2rem;">
+        <h4 style="margin-bottom: 1rem; color: #fff;">Son İstekler (Canlı)</h4>
+        <div class="log-section">
+          <div class="table-responsive">
+            <table id="logTable">
+              <thead>
+                <tr>
+                  <th>METOD</th>
+                  <th>ENDPOINT</th>
+                  <th>DURUM</th>
+                  <th>SÜRE</th>
+                  <th>ZAMAN</th>
+                </tr>
+              </thead>
+              <tbody id="logBody"></tbody>
+            </table>
           </div>
         </div>
       </div>

@@ -64,6 +64,14 @@ class DispatcherGateway {
     }
 
     initializeMiddlewares() {
+        // Gereksiz tarayıcı isteklerini (favicon, vb.) yoksay ve loglamayı engelle
+        this.app.use((req, res, next) => {
+            if (req.originalUrl.includes('favicon.ico') || req.originalUrl.includes('.well-known')) {
+                return res.status(204).end();
+            }
+            next();
+        });
+
         // Detaylı Loglama Middleware
         this.app.use((req, res, next) => {
             const start = Date.now();
@@ -143,6 +151,14 @@ class DispatcherGateway {
                 on: {
                     proxyReq: (proxyReq, req) => {
                         if (req.user) proxyReq.setHeader('X-User-Info', JSON.stringify(req.user));
+                        
+                        // fix: express.json() middleware consumes the body stream before the proxy relays it
+                        if (req.body && Object.keys(req.body).length > 0 && req.method !== 'GET') {
+                            const bodyData = JSON.stringify(req.body);
+                            proxyReq.setHeader('Content-Type', 'application/json');
+                            proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+                            proxyReq.write(bodyData);
+                        }
                     },
                     error: (err, req, res) => {
                         if (!res.headersSent) {

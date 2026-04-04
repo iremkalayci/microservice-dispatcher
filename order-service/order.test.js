@@ -12,7 +12,7 @@ class OrderServiceTestSuite {
   constructor() {
     this.app = null;
     this.mongoServer = null;
-    this.baseRoute = '/orders';
+    this.baseRoute = '/';
   }
 
   async init() {
@@ -131,6 +131,58 @@ class OrderServiceTestSuite {
         expect(order.productId).toBe("10");
         expect(order.quantity).toBe(5);
         expect(order.status).toBe('Hazırlanıyor');
+      });
+    });
+
+    describe('Order Service - GET /:id', () => {
+      it('should return 400 for invalid ObjectId formatting', async () => {
+        const response = await request(this.app).get(`${this.baseRoute}invalid-id`);
+        // Assuming your backend catches CastError and throws 400:
+        expect(response.statusCode).toBe(400); 
+      });
+
+      it('should return 404 for non-existent order', async () => {
+        const fakeId = new mongoose.Types.ObjectId();
+        const response = await request(this.app).get(`${this.baseRoute}${fakeId}`);
+        expect(response.statusCode).toBe(404);
+      });
+
+      it('should return order details for valid ID', async () => {
+        const createRes = await request(this.app).post(this.baseRoute).send({ userId: "1", productId: "10" });
+        const orderId = createRes.body._id;
+
+        const response = await request(this.app).get(`${this.baseRoute}${orderId}`);
+        expect(response.statusCode).toBe(200);
+        expect(response.body._id).toBe(orderId);
+      });
+    });
+
+    describe('Order Service - PUT /:id', () => {
+      it('should update an existing order', async () => {
+        const createRes = await request(this.app).post(this.baseRoute).send({ userId: "1", productId: "10" });
+        const orderId = createRes.body._id;
+
+        const updateRes = await request(this.app).put(`${this.baseRoute}${orderId}`).send({
+          userId: "1",
+          productId: "10",
+          status: "Kargoya Verildi"
+        });
+
+        expect(updateRes.statusCode).toBe(200);
+        expect(updateRes.body.status).toBe("Kargoya Verildi");
+      });
+    });
+
+    describe('Order Service - DELETE /:id', () => {
+      it('should delete an existing order', async () => {
+        const createRes = await request(this.app).post(this.baseRoute).send({ userId: "1", productId: "10" });
+        const orderId = createRes.body._id;
+
+        const delRes = await request(this.app).delete(`${this.baseRoute}${orderId}`);
+        expect(delRes.statusCode).toBe(200);
+
+        const getRes = await request(this.app).get(`${this.baseRoute}${orderId}`);
+        expect(getRes.statusCode).toBe(404);
       });
     });
   }

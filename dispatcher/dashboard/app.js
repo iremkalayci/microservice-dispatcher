@@ -242,8 +242,9 @@ async function tryEndpoint(method, path, bodyElId) {
 
 function getResultId(method, path) {
   // Map dynamic paths to static result IDs
-  if (path.match(/^\/users\/\d+$/)) return `result-${method}-/users/id`;
-  if (path.match(/^\/products\/\d+$/)) return `result-${method}-/products/id`;
+  if (path.match(/^\/users\/[^/]+$/)) return `result-${method}-/users/id`;
+  if (path.match(/^\/products\/[^/]+$/)) return `result-${method}-/products/id`;
+  if (path.match(/^\/orders\/[^/]+$/)) return `result-${method}-/orders/id`;
   return `result-${method}-${path}`;
 }
 
@@ -503,6 +504,29 @@ async function refreshMetrics() {
                     },
                     plugins: { legend: { display: false } }
                 }
+            });
+        }
+
+        // 3. Alt Kısımdaki Log Tablosunu Doldur (Son 50 Istek)
+        const tableBody = document.getElementById('logBody');
+        if (tableBody) {
+            tableBody.innerHTML = '';
+            recentLogs.reverse().forEach(log => {
+                const statusColor = log.statusCode < 400 ? '#98c379' : '#e06c75';
+                const statusBg = log.statusCode < 400 ? 'rgba(152, 195, 121, 0.1)' : 'rgba(224, 108, 117, 0.1)';
+                
+                const row = `<tr>
+                    <td class="method-${log.method.toLowerCase()}">${log.method}</td>
+                    <td style="color: #abb2bf; font-family: 'JetBrains Mono'">${log.endpoint}</td>
+                    <td>
+                        <span class="status-badge" style="background:${statusBg}; color:${statusColor}; border: 1px solid ${statusColor}44">
+                            ${log.statusCode}
+                        </span>
+                    </td>
+                    <td style="color: #c678dd">${log.responseTime} ms</td>
+                    <td style="color: #5c6370">${new Date(log.timestamp).toLocaleTimeString()}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
             });
         }
 

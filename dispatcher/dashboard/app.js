@@ -424,38 +424,93 @@ document.addEventListener('keydown', (e) => {
     }
   }
 });
-async function refreshLogs() {
-    try {
-        const response = await fetch('http://localhost:3000/api/logs'); // Dispatcher'daki log endpoint'in
-        const logs = await response.json();
-        const tableBody = document.getElementById('logBody');
-        
-        if (!tableBody) return;
-        tableBody.innerHTML = ''; 
+let statusChartInstance = null;
+let timeChartInstance = null;
 
+async function refreshMetrics() {
+    try {
+        const response = await fetch(`${BASE_URL}/api/logs`);
+        const logs = await response.json();
+        
+        if (!logs || logs.length === 0) return;
+        
+        // 1. Status Kodları Analizi (Pie Chart)
+        const statusCounts = {};
         logs.forEach(log => {
-            const statusColor = log.statusCode < 400 ? '#98c379' : '#e06c75';
-            const statusBg = log.statusCode < 400 ? 'rgba(152, 195, 121, 0.1)' : 'rgba(224, 108, 117, 0.1)';
-            
-            const row = `<tr>
-                <td class="method-${log.method.toLowerCase()}">${log.method}</td>
-                <td style="color: #abb2bf; font-family: 'JetBrains Mono'">${log.endpoint}</td>
-                <td>
-                    <span class="status-badge" style="background:${statusBg}; color:${statusColor}; border: 1px solid ${statusColor}44">
-                        ${log.statusCode}
-                    </span>
-                </td>
-                <td style="color: #c678dd">${log.responseTime} ms</td>
-                <td style="color: #5c6370">${new Date(log.timestamp).toLocaleTimeString()}</td>
-            </tr>`;
-            tableBody.innerHTML += row;
+            const sc = log.statusCode;
+            statusCounts[sc] = (statusCounts[sc] || 0) + 1;
         });
+
+        const statusLabels = Object.keys(statusCounts);
+        const statusData = Object.values(statusCounts);
+        const statusColors = statusLabels.map(code => 
+            parseInt(code) < 300 ? '#10b981' : 
+            parseInt(code) < 400 ? '#3b82f6' :
+            parseInt(code) < 500 ? '#f59e0b' : '#ef4444'
+        );
+
+        const ctxStatus = document.getElementById('statusChart');
+        if (ctxStatus) {
+            if (statusChartInstance) statusChartInstance.destroy();
+            statusChartInstance = new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: statusLabels.map(l => l + ' ' + getStatusText(parseInt(l))),
+                    datasets: [{
+                        data: statusData,
+                        backgroundColor: statusColors,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'right', labels: { color: '#fff' } } 
+                    }
+                }
+            });
+        }
+
+        // 2. İstek Süreleri (Line Chart)
+        // Son 50 isteği zaman sırasına göre chart'a dökelim
+        const recentLogs = logs.slice(0, 50).reverse();
+        const timeLabels = recentLogs.map(l => new Date(l.timestamp).toLocaleTimeString());
+        const durationData = recentLogs.map(l => l.responseTime);
+
+        const ctxTime = document.getElementById('timeChart');
+        if (ctxTime) {
+            if (timeChartInstance) timeChartInstance.destroy();
+            timeChartInstance = new Chart(ctxTime, {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: [{
+                        label: 'Response Time (ms)',
+                        data: durationData,
+                        borderColor: '#a855f7',
+                        backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#a0aabf' } },
+                        x: { grid: { display: false }, ticks: { display: false } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
     } catch (err) {
-        console.error("Log hatası:", err);
+        console.error("Metrik hatası:", err);
     }
 }
 
 // 5 saniyede bir güncelle
-setInterval(refreshLogs, 5000);
-refreshLogs();
-
+setInterval(refreshMetrics, 5000);
+refreshMetrics();

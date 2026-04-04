@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <!-- Background Gradient Orbs -->
@@ -124,6 +125,17 @@
           <a href="#section-products" class="sidebar-link" data-section="products">
             <span class="service-dot" style="--dot-color: #8b5cf6"></span>
             Product Service
+          </a>
+          <a href="#section-orders" class="sidebar-link" data-section="orders">
+            <span class="service-dot" style="--dot-color: #ec4899"></span>
+            Order Service
+          </a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">ANALYTICS</h4>
+          <a href="#section-metrics" class="sidebar-link" data-section="metrics">
+            <span class="service-dot" style="--dot-color: #a855f7"></span>
+            Metrics & Reports
           </a>
         </div>
       </nav>
@@ -1114,62 +1126,79 @@
           </div>
         </div>
       </section>
-    <section class="api-section log-container-fluid" id="section-performance" style="margin-bottom: 2rem;">
-  <div class="section-header">
-    <div class="section-badge" style="--badge-color: #03dac6">
-      Performance Metrics
-    </div>
-    <h3 class="section-title">Sistem Yük ve Stres Analizi</h3>
-    <p class="section-desc">Locust ile simüle edilen trafik altında performans verileri.</p>
-  </div>
+    <section class="api-section" id="section-orders">
+      <div class="section-header">
+        <div class="section-badge" style="--badge-color: #ec4899">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          </svg>
+          Orders
+        </div>
+        <h3 class="section-title">Order Service</h3>
+        <p class="section-desc">Sipariş oluşturma ve yönetimi. Port: <code>3004</code></p>
+      </div>
 
-  <div class="log-section" style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
-    <div class="card">
-      <span>MAX USERS</span>
-      <h2>500 VU</h2>
-    </div>
-    <div class="card">
-      <span>AVG RESP.</span>
-      <h2>12ms</h2>
-    </div>
-    <div class="card">
-      <span>ERR RATE</span>
-      <h2>%0.0</h2>
-    </div>
-    <div>
-      <a href="locust_report.html" target="_blank" class="btn">
-        GRAFİK ANALİZİNİ AÇ
-      </a>
-    </div>
-  </div>
-</section>
+      <!-- POST /orders -->
+      <div class="endpoint-card" id="ep-orders-create">
+        <div class="endpoint-header" onclick="toggleEndpoint('ep-orders-create')">
+          <div class="endpoint-info">
+            <span class="method-badge method-post">POST</span>
+            <span class="endpoint-path">/orders</span>
+          </div>
+          <div class="endpoint-meta">
+            <span class="endpoint-desc">Yeni sipariş oluştur</span>
+            <span class="endpoint-lock"></span>
+            <svg class="endpoint-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="endpoint-body">
+          <div class="endpoint-details">
+            <div class="try-it-section">
+              <h5>Try it out</h5>
+              <textarea id="body-orders-create" class="body-input" rows="4">{
+  "productId": 1,
+  "quantity": 2,
+  "totalPrice": 1500
+}</textarea>
+              <button class="btn-try" onclick="tryEndpoint('POST', '/orders', 'body-orders-create')">Execute</button>
+              <div class="try-result" id="result-POST-/orders"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<section class="api-section log-container-fluid" id="section-logs">
-  <div class="section-header">
-    <div class="section-badge" style="--badge-color: #bb86fc">
-      Monitoring
-    </div>
-    <h3 class="section-title">Dispatcher Trafik Logları</h3>
-    <p class="section-desc">Gateway logları anlık çekiliyor.</p>
-  </div>
+    <section class="api-section log-container-fluid" id="section-metrics">
+      <div class="section-header">
+        <div class="section-badge" style="--badge-color: #a855f7">
+          Analytics
+        </div>
+        <h3 class="section-title">Metrikler ve Yük Testi Raporları</h3>
+        <p class="section-desc">Anlık Dispatcher trafiğinin analizi ve son yük testi raporları.</p>
+      </div>
 
-  <div class="log-section">
-    <div class="table-responsive">
-      <table id="logTable">
-        <thead>
-          <tr>
-            <th>METOD</th>
-            <th>ENDPOINT</th>
-            <th>DURUM</th>
-            <th>SÜRE</th>
-            <th>ZAMAN</th>
-          </tr>
-        </thead>
-        <tbody id="logBody"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <h4>Trafik Dağılımı (Status Codes)</h4>
+          <div class="chart-container">
+            <canvas id="statusChart"></canvas>
+          </div>
+        </div>
+        <div class="metric-card">
+          <h4>İstek Süreleri (Trend)</h4>
+          <div class="chart-container">
+            <canvas id="timeChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div>
+         <h4 style="margin-bottom: 1rem; color: #fff;">Locust Yük Testi Sonuçları</h4>
+         <iframe src="locust_report.html" style="width:100%; height:800px; border:1px solid rgba(255,255,255,0.1); border-radius:12px; background:#fff"></iframe>
+      </div>
+    </section>
 
 <!-- SCRIPT EN AŞAĞIDA -->
 <script src="app.js"></script>

@@ -1,0 +1,164 @@
+--progress is a global compose flag, better use `docker compose --progress xx build ...
+time="2026-04-02T21:20:56+03:00" level=warning msg="C:\\Users\\muham\\Desktop\\dispatcher\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.09kB 0.0s done
+#1 DONE 0.0s
+
+#2 [user-service internal] load build definition from Dockerfile
+#2 transferring dockerfile: 173B done
+#2 DONE 0.0s
+
+#3 [auth-service internal] load build definition from Dockerfile
+#3 transferring dockerfile: 173B done
+#3 DONE 0.1s
+
+#4 [product-service internal] load build definition from Dockerfile
+#4 transferring dockerfile: 173B done
+#4 DONE 0.1s
+
+#5 [dispatcher internal] load build definition from Dockerfile
+#5 transferring dockerfile: 173B done
+#5 DONE 0.1s
+
+#6 [dispatcher internal] load metadata for docker.io/library/node:18-alpine
+#6 DONE 0.3s
+
+#7 [auth-service internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.1s
+
+#8 [auth-service internal] load build context
+#8 DONE 0.0s
+
+#9 [auth-service 1/5] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+#9 resolve docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e 0.1s done
+#9 DONE 0.1s
+
+#10 [dispatcher internal] load .dockerignore
+#10 transferring context: 109B done
+#10 DONE 0.1s
+
+#11 [product-service internal] load .dockerignore
+#11 transferring context: 109B 0.0s done
+#11 DONE 0.2s
+
+#12 [user-service internal] load .dockerignore
+#12 transferring context: 109B 0.0s done
+#12 DONE 0.2s
+
+#13 [product-service internal] load build context
+#13 transferring context: 224B done
+#13 DONE 0.1s
+
+#8 [auth-service internal] load build context
+#8 transferring context: 157B done
+#8 DONE 0.1s
+
+#14 [dispatcher internal] load build context
+#14 transferring context: 373B done
+#14 DONE 0.1s
+
+#15 [user-service internal] load build context
+#15 transferring context: 224B done
+#15 DONE 0.1s
+
+#16 [user-service 4/5] RUN npm install --omit=dev
+#16 CACHED
+
+#17 [user-service 3/5] COPY package*.json ./
+#17 CACHED
+
+#18 [user-service 5/5] COPY . .
+#18 CACHED
+
+#19 [auth-service 4/5] RUN npm install --omit=dev
+#19 CACHED
+
+#20 [auth-service 3/5] COPY package*.json ./
+#20 CACHED
+
+#21 [auth-service 5/5] COPY . .
+#21 CACHED
+
+#22 [product-service 4/5] RUN npm install --omit=dev
+#22 CACHED
+
+#23 [product-service 3/5] COPY package*.json ./
+#23 CACHED
+
+#24 [product-service 5/5] COPY . .
+#24 CACHED
+
+#25 [dispatcher 4/5] RUN npm install --omit=dev
+#25 CACHED
+
+#26 [user-service 2/5] WORKDIR /app
+#26 CACHED
+
+#27 [dispatcher 3/5] COPY package*.json ./
+#27 CACHED
+
+#28 [dispatcher 5/5] COPY . .
+#28 CACHED
+
+#29 [user-service] exporting to image
+#29 exporting layers
+#29 exporting layers done
+#29 exporting manifest sha256:83e2f8e8a996154c5f3f1a3f00b9ebf5086c237673dfdff01a5b85fcf09970eb 0.0s done
+#29 exporting config sha256:4254b1b88de9deb062d9827b95753dda6f7b1cebc29328f58f2b89b462fee0ad 0.0s done
+#29 exporting attestation manifest sha256:8bd9982c59b99842eb3ad920d5be5bb77d641cc240a9f747cedf048aa69b8ca8
+#29 exporting attestation manifest sha256:8bd9982c59b99842eb3ad920d5be5bb77d641cc240a9f747cedf048aa69b8ca8 0.2s done
+#29 exporting manifest list sha256:4e9ed9e973a1ffca8596d9bb752e6cf681fb7863c5e89a3e7e924b22a151b4ae
+#29 ...
+
+#30 [auth-service] exporting to image
+#30 exporting layers done
+#30 exporting manifest sha256:e3eadd5a53053d3e4aed03aecffcda99ca679ec31f1a511b41730a2227932b3a 0.0s done
+#30 exporting config sha256:321618066336ac15faa326bac77a6072de2949c72c518c0305df74e87cf11c21 0.0s done
+#30 exporting attestation manifest sha256:34cffa8d6afee074029f117ebc71fcd2529b9569a4294542332396ccf1a517e8 0.2s done
+#30 exporting manifest list sha256:0ace3ceb1c2bc257bd0024c0c7518257fbf34b4a68996847a8b4ab2ee88f9197 0.1s done
+#30 naming to docker.io/library/dispatcher-auth-service:latest 0.0s done
+#30 unpacking to docker.io/library/dispatcher-auth-service:latest 0.0s done
+#30 DONE 0.6s
+
+#31 [product-service] exporting to image
+#31 exporting layers done
+#31 exporting manifest sha256:6ad26aef3f13721524a4ba9f29f38319f79f4e2cdd9605295d67aef48e338ded 0.0s done
+#31 exporting config sha256:1fcb04feffebd91b016bd5caafcbae819d435be1bb964eba320e149747b6e24b 0.0s done
+#31 exporting attestation manifest sha256:b0a3b3dac51653b6a70a81c4ad388b9e2b4175fb1c30eb6c488a1ab5017c5bf1 0.2s done
+#31 exporting manifest list sha256:deb792d13e0d5a908b0ae6b4412303af7397ea1c40401d5a7e94a9260c77dbc7 0.1s done
+#31 naming to docker.io/library/dispatcher-product-service:latest 0.0s done
+#31 unpacking to docker.io/library/dispatcher-product-service:latest 0.0s done
+#31 DONE 0.6s
+
+#29 [user-service] exporting to image
+#29 exporting manifest list sha256:4e9ed9e973a1ffca8596d9bb752e6cf681fb7863c5e89a3e7e924b22a151b4ae 0.1s done
+#29 naming to docker.io/library/dispatcher-user-service:latest 0.0s done
+#29 unpacking to docker.io/library/dispatcher-user-service:latest 0.0s done
+#29 DONE 0.6s
+
+#32 [dispatcher] exporting to image
+#32 exporting layers done
+#32 exporting manifest sha256:f1e795c889eb01dc9dd78a3e3c54015896557514d512b181bf26a19fb185e59b 0.0s done
+#32 exporting config sha256:d8f341a33cd76b48b1482689147bd1c0ac95f62a01981f147aaafc1fcebd4e6c 0.0s done
+#32 exporting attestation manifest sha256:c4924411f90f51884317f2b7a419e750c1dccd47134a24352c922d6955eb5721 0.2s done
+#32 exporting manifest list sha256:1612da7a59b8af17dd1e6613a96f4499cb35fce1e2967fa22c5134214eb3e76d 0.1s done
+#32 naming to docker.io/library/dispatcher-dispatcher:latest 0.0s done
+#32 unpacking to docker.io/library/dispatcher-dispatcher:latest 0.0s done
+#32 DONE 0.6s
+
+#33 [auth-service] resolving provenance for metadata file
+#33 DONE 0.2s
+
+#34 [user-service] resolving provenance for metadata file
+#34 DONE 0.1s
+
+#35 [product-service] resolving provenance for metadata file
+#35 DONE 0.2s
+
+#36 [dispatcher] resolving provenance for metadata file
+#36 DONE 0.0s
+ dispatcher-auth-service  Built
+ dispatcher-dispatcher  Built
+ dispatcher-product-service  Built
+ dispatcher-user-service  Built

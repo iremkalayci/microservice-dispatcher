@@ -1,0 +1,250 @@
+  console.log
+    Dispatcher Özel DB Bağlantısı Başarılı ✅
+
+      at log (app.js:20:33)
+
+  console.log
+    [2026-04-04T22:02:12.015Z] GET /health → 200 (4ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.026Z] GET /health → 200 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.033Z] GET /services → 200 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.041Z] GET /services → 200 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.050Z] GET /users → 401 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.059Z] GET /users → 403 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.066Z] GET /users → 403 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.073Z] GET /users → 403 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.079Z] GET /users → 401 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.092Z] POST /users → 401 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.102Z] PUT /users/1 → 401 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.108Z] PATCH /users/1 → 401 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.113Z] DELETE /users/1 → 401 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.120Z] POST /users → 403 (0ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.125Z] PUT /users/1 → 403 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.137Z] DELETE /users/1 → 403 (2ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.148Z] GET /products → 401 (2ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.156Z] GET /products → 403 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.164Z] GET /products → 403 (2ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.171Z] GET /products → 403 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.177Z] GET /products → 401 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.184Z] POST /products → 401 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.191Z] PUT /products/1 → 401 (0ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.199Z] PATCH /products/1 → 401 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.207Z] DELETE /products/1 → 401 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.219Z] POST /products → 403 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.227Z] PUT /products/1 → 403 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.235Z] DELETE /products/1 → 403 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.242Z] GET /unknown → 404 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.255Z] GET /nonexistent → 404 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.261Z] GET / → 404 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.267Z] POST /unknown → 404 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.273Z] GET /doesnotexist → 404 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+  console.log
+    [2026-04-04T22:02:12.278Z] GET /orders → 401 (1ms)
+
+      at ServerResponse.log (app.js:86:25)
+
+FAIL tests/router.test.js
+  Dispatcher - Health & Service Discovery
+    √ GET /health should return status ok without auth (35 ms)
+    √ GET /health routes should include /users and /products (6 ms)
+    √ GET /services should list all registered services (7 ms)
+    √ GET /services each service should have target and description (8 ms)
+  Dispatcher - /users Auth
+    √ should return 401 for GET /users without token (8 ms)
+    √ should return 403 for GET /users with invalid token (8 ms)
+    √ should return 403 for GET /users with expired token (7 ms)
+    √ should return 403 for GET /users with wrong secret token (7 ms)
+    √ should return 401 for GET /users with empty authorization header (6 ms)
+    √ should return 401 for POST /users without token (13 ms)
+    √ should return 401 for PUT /users/1 without token (10 ms)
+    √ should return 401 for PATCH /users/1 without token (6 ms)
+    √ should return 401 for DELETE /users/1 without token (5 ms)
+    √ should return 403 for POST /users with invalid token (6 ms)
+    √ should return 403 for PUT /users/1 with expired token (6 ms)
+    √ should return 403 for DELETE /users/1 with wrong secret (13 ms)
+  Dispatcher - /products Auth
+    √ should return 401 for GET /products without token (10 ms)
+    √ should return 403 for GET /products with invalid token (6 ms)
+    √ should return 403 for GET /products with expired token (9 ms)
+    √ should return 403 for GET /products with wrong secret token (6 ms)
+    √ should return 401 for GET /products with empty authorization header (6 ms)
+    √ should return 401 for POST /products without token (8 ms)
+    √ should return 401 for PUT /products/1 without token (7 ms)
+    √ should return 401 for PATCH /products/1 without token (7 ms)
+    √ should return 401 for DELETE /products/1 without token (7 ms)
+    √ should return 403 for POST /products with expired token (12 ms)
+    √ should return 403 for PUT /products/1 with invalid token (7 ms)
+    √ should return 403 for DELETE /products/1 with wrong secret (8 ms)
+  Dispatcher - Unknown Routes (404)
+    √ should return 404 for GET /unknown (7 ms)
+    √ should return 404 for GET /nonexistent with valid token (12 ms)
+    √ should return 404 for GET / (5 ms)
+    √ should return 404 for POST /unknown (6 ms)
+    √ 404 response should list available routes (6 ms)
+    × 404 response should include requested path (7 ms)
+  Dispatcher - Auth Middleware (Unit)
+    √ should call next() with valid token (1 ms)
+    √ should return 401 when no token provided
+    √ should return 401 when authorization header is empty string
+    √ should return 403 for expired token (1 ms)
+    √ should return 403 for token with wrong secret (1 ms)
+    √ should attach decoded user to req.user on valid token (1 ms)
+  Dispatcher - Service Registry
+    √ should have users service configured
+    √ should have products service configured (1 ms)
+    √ users pathRewrite should strip /users prefix
+    √ products pathRewrite should strip /products prefix (1 ms)
+    √ all services should have required fields (1 ms)
+
+  ● Dispatcher - Unknown Routes (404) › 404 response should include requested path
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "/orders"
+    Received: undefined
+
+    [0m [90m 305 |[39m   it([32m'404 response should include requested path'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+     [90m 306 |[39m     [36mconst[39m res [33m=[39m [36mawait[39m request(app)[33m.[39m[36mget[39m([32m'/orders'[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 307 |[39m     expect(res[33m.[39mbody[33m.[39mpath)[33m.[39mtoBe([32m'/orders'[39m)[33m;[39m
+     [90m     |[39m                           [31m[1m^[22m[39m
+     [90m 308 |[39m   })[33m;[39m
+     [90m 309 |[39m })[33m;[39m
+     [90m 310 |[39m[0m
+
+      at Object.toBe (tests/router.test.js:307:27)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 44 passed, 45 total
+Snapshots:   0 total
+Time:        0.651 s, estimated 1 s
+Ran all test suites matching tests/router.test.js.

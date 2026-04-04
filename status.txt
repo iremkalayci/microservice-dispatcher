@@ -1,0 +1,29 @@
+ M README.md
+ M auth-service/package-lock.json
+ M auth-service/package.json
+ M auth-service/tests/auth.test.js
+ M dispatcher/app.js
+ M dispatcher/node_modules/.package-lock.json
+ M dispatcher/package-lock.json
+ M dispatcher/package.json
+ M dispatcher/server.js
+ M dispatcher/tests/router.test.js
+ M docker-compose.yml
+ M locustfile.py
+ M order-service/order.test.js
+ M order-service/package-lock.json
+ M order-service/package.json
+ M product-service/package-lock.json
+ M product-service/package.json
+ M product-service/tests/product.test.js
+?? __pycache__/locustfile.cpython-314.pyc
+?? build_log.txt
+?? build_log_plain.txt
+?? dispatcher/out.json
+?? dispatcher/test_out.txt
+?? dispatcher/test_output.txt
+?? dispatcher/test_output3.txt
+?? dispatcher/test_output4.txt
+?? git_status.txt
+?? locust_report.txt
+?? status.txt

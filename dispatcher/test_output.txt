@@ -1,0 +1,752 @@
+  console.log
+    Downloading MongoDB "8.2.1": 0% (0mb / 777.5mb)[0G
+
+      at MongoBinaryDownload.printDownloadProgress (node_modules/mongodb-memory-server-core/src/util/MongoBinaryDownload.ts:664:15)
+
+  console.log
+    Downloading MongoDB "8.2.1": 0.2% (1.3mb / 777.5mb)[0G
+
+      at MongoBinaryDownload.printDownloadProgress (node_modules/mongodb-memory-server-core/src/util/MongoBinaryDownload.ts:664:15)
+
+  console.log
+    Downloading MongoDB "8.2.1": 0.4% (3mb / 777.5mb)[0G
+
+      at MongoBinaryDownload.printDownloadProgress (node_modules/mongodb-memory-server-core/src/util/MongoBinaryDownload.ts:664:15)
+
+  console.log
+    Downloading MongoDB "8.2.1": 0.6% (4.5mb / 777.5mb)[0G
+
+      at MongoBinaryDownload.printDownloadProgress (node_modules/mongodb-memory-server-core/src/util/MongoBinaryDownload.ts:664:15)
+
+  console.log
+    Downloading MongoDB "8.2.1": 0.8% (6mb / 777.5mb)[0G
+
+      at MongoBinaryDownload.printDownloadProgress (node_modules/mongodb-memory-server-core/src/util/MongoBinaryDownload.ts:664:15)
+
+FAIL tests/router.test.js (10.692 s)
+  ● Dispatcher - Health & Service Discovery › GET /health should return status ok without auth
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Health & Service Discovery › GET /health routes should include /users and /products
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Health & Service Discovery › GET /services should list all registered services
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Health & Service Discovery › GET /services each service should have target and description
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /users Auth › should return 401 for GET /users without token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /users Auth › should return 403 for GET /users with invalid token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /users Auth › should return 403 for GET /users with expired token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /users Auth › should return 403 for GET /users with wrong secret token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /users Auth › should return 401 for GET /users with empty authorization header
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /users Auth › should return 401 for POST /users without token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /users Auth › should return 401 for PUT /users/1 without token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /users Auth › should return 401 for PATCH /users/1 without token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /users Auth › should return 401 for DELETE /users/1 without token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /users Auth › should return 403 for POST /users with invalid token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /users Auth › should return 403 for PUT /users/1 with expired token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /users Auth › should return 403 for DELETE /users/1 with wrong secret
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /products Auth › should return 401 for GET /products without token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /products Auth › should return 403 for GET /products with invalid token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /products Auth › should return 403 for GET /products with expired token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /products Auth › should return 403 for GET /products with wrong secret token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /products Auth › should return 401 for GET /products with empty authorization header
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /products Auth › should return 401 for POST /products without token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /products Auth › should return 401 for PUT /products/1 without token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /products Auth › should return 401 for PATCH /products/1 without token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /products Auth › should return 401 for DELETE /products/1 without token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /products Auth › should return 403 for POST /products with expired token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /products Auth › should return 403 for PUT /products/1 with invalid token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - /products Auth › should return 403 for DELETE /products/1 with wrong secret
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Unknown Routes (404) › should return 404 for GET /unknown
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Unknown Routes (404) › should return 404 for GET /nonexistent with valid token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Unknown Routes (404) › should return 404 for GET /
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Unknown Routes (404) › should return 404 for POST /unknown
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Unknown Routes (404) › 404 response should list available routes
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Unknown Routes (404) › 404 response should include requested path
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Auth Middleware (Unit) › should call next() with valid token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Auth Middleware (Unit) › should return 401 when no token provided
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Auth Middleware (Unit) › should return 401 when authorization header is empty string
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Auth Middleware (Unit) › should return 403 for expired token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Auth Middleware (Unit) › should return 403 for token with wrong secret
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Auth Middleware (Unit) › should attach decoded user to req.user on valid token
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Service Registry › should have users service configured
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Service Registry › should have products service configured
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Service Registry › users pathRewrite should strip /users prefix
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Service Registry › products pathRewrite should strip /products prefix
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+  ● Dispatcher - Service Registry › all services should have required fields
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m  6 |[39m [36mlet[39m app[33m,[39m auth[33m,[39m [33mSERVICES[39m[33m,[39m mongoServer[33m;[39m
+     [90m  7 |[39m
+    [31m[1m>[22m[39m[90m  8 |[39m beforeAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m  9 |[39m   mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m 10 |[39m   process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 11 |[39m   [36mconst[39m gateway [33m=[39m require([32m'../app'[39m)[33m;[39m[0m
+
+      at Object.beforeAll (tests/router.test.js:8:1)
+
+
+  ● Test suite failed to run
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+    [0m [90m 15 |[39m })[33m;[39m
+     [90m 16 |[39m
+    [31m[1m>[22m[39m[90m 17 |[39m afterAll([36masync[39m () [33m=>[39m {
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m 18 |[39m   [36mawait[39m mongoose[33m.[39mdisconnect()[33m;[39m
+     [90m 19 |[39m   [36mif[39m (mongoServer) [36mawait[39m mongoServer[33m.[39mstop()[33m;[39m
+     [90m 20 |[39m })[33m;[39m[0m
+
+      at Object.afterAll (tests/router.test.js:17:1)
+
+Test Suites: 1 failed, 1 total
+Tests:       45 failed, 45 total
+Snapshots:   0 total
+Time:        10.733 s
+Ran all test suites matching tests/router.test.js.
+
+Jest has detected the following 1 open handle potentially keeping Jest from exiting:
+
+  ●  Timeout
+
+    [0m [90m 17 |[39m         [90m// --- 1. DISPATCHER ÖZEL VERİTABANI BAĞLANTISI ---[39m
+     [90m 18 |[39m         [36mconst[39m mongoUri [33m=[39m process[33m.[39menv[33m.[39m[33mDISPATCHER_DB_URI[39m [33m||[39m [32m'mongodb://dispatcher-db:27017/dispatcher_db'[39m[33m;[39m
+    [31m[1m>[22m[39m[90m 19 |[39m         mongoose[33m.[39mconnect(mongoUri)
+     [90m    |[39m                  [31m[1m^[22m[39m
+     [90m 20 |[39m             [33m.[39mthen(() [33m=>[39m console[33m.[39mlog([32m"Dispatcher Özel DB Bağlantısı Başarılı ✅"[39m))
+     [90m 21 |[39m             [33m.[39m[36mcatch[39m(err [33m=>[39m console[33m.[39merror([32m"Dispatcher DB Bağlantı Hatası ❌:"[39m[33m,[39m err))[33m;[39m
+     [90m 22 |[39m[0m
+
+      at new Timeout (node_modules/mongodb/src/timeout.ts:78:27)
+      at Timeout.expires (node_modules/mongodb/src/timeout.ts:115:12)
+      at LegacyTimeoutContext.get serverSelectionTimeout [as serverSelectionTimeout] (node_modules/mongodb/src/timeout.ts:364:22)
+      at Topology.selectServer (node_modules/mongodb/src/sdam/topology.ts:572:66)
+      at Topology._connect (node_modules/mongodb/src/sdam/topology.ts:469:33)
+      at Topology.connect (node_modules/mongodb/src/sdam/topology.ts:403:34)
+      at topologyConnect (node_modules/mongodb/src/mongo_client.ts:662:30)
+      at MongoClient._connect (node_modules/mongodb/src/mongo_client.ts:674:13)
+      at MongoClient.connect (node_modules/mongodb/src/mongo_client.ts:585:34)
+      at NativeConnection.createClient (node_modules/mongoose/lib/drivers/node-mongodb-native/connection.js:346:16)
+      at NativeConnection.openUri (node_modules/mongoose/lib/connection.js:1086:34)
+      at Mongoose.connect (node_modules/mongoose/lib/mongoose.js:475:15)
+      at new connect (app.js:19:18)
+      at Object.<anonymous> (app.js:153:17)
+      at require (tests/router.test.js:313:20)
+      at Object.describe (tests/router.test.js:312:1)
+

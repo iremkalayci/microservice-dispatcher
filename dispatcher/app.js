@@ -115,7 +115,7 @@ class DispatcherGateway {
         // GÜNCELLENDİ: '/dispatcher/logs' yerine Dashboard'un beklediği '/api/logs' yapıldı
         this.app.get('/api/logs', async (req, res) => {
             try {
-                const logs = await this.LogModel.find().sort({ timestamp: -1 }).limit(50);
+                const logs = await this.LogModel.find().sort({ timestamp: -1 }).limit(200);
                 res.json(logs);
             } catch (err) {
                 res.status(500).json({ error: "Loglar getirilemedi" });

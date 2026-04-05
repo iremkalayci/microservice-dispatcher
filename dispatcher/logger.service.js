@@ -3,54 +3,67 @@ const LokiTransport = require('winston-loki');
 
 class LoggerService {
     constructor() {
-        // Singleton Pattern: Eğer zaten bir instance varsa onu döndür
         if (LoggerService.instance) {
             return LoggerService.instance;
         }
-        const LOKI_URL = 'https://<USER_ID>:<API_KEY>@logs-prod-eu-west-0.grafana.net';
 
-        // Logger objesinin kurgulanması
+        const LOKI_URL = 'https://logs-prod-039.grafana.net';
+        const LOKI_USER = '1541023';
+        const LOKI_TOKEN = 'glc_eyJvIjoiMTcyMTQwOCIsIm4iOiJtaWNyb3NlcnZpY2UtZGlzcGF0Y2hlci1pcmVta2FsYXljaSIsImsiOiJzVGE1NEw4WjQ1MDcxd0VwMHFIWkxlMWoiLCJtIjp7InIiOiJwcm9kLWV1LWNlbnRyYWwtMCJ9fQ==';
+
         this.logger = winston.createLogger({
             level: 'info',
             transports: [
                 new LokiTransport({
                     host: LOKI_URL,
+                    basicAuth: `${LOKI_USER}:${LOKI_TOKEN}`,
                     labels: { job: 'dispatcher-service' },
                     json: true,
+                    // 🔥 BURASI KRİTİK: Bağlantı hatalarını engellemek için ekledik
+                    batching: true, 
+                    interval: 5, // Logları 5 saniyede bir toplu gönder (Sistemi yormaz)
+                    timeout: 5000, // 5 saniye içinde cevap gelmezse zorlama
                     replaceTimestamp: true,
-                    onConnectionError: (err) => console.error('Loki Bağlantı Hatası:', err)
+                    onConnectionError: (err) => {
+                        console.error('Loki Bağlantı Hatası Detayı:', err.message);
+                    }
                 }),
-                new winston.transports.Console() // Terminalde de görelim
+                new winston.transports.Console({
+                    format: winston.format.combine(
+                        winston.format.colorize(),
+                        winston.format.simple()
+                    )
+                })
             ]
         });
 
         LoggerService.instance = this;
     }
 
-    // Normal bilgilendirme logları için metod
     logInfo(message, meta = {}) {
         this.logger.info(message, meta);
     }
 
-    // Hata logları için metod
     logError(message, meta = {}) {
         this.logger.error(message, meta);
     }
 
-    // Express.js trafiğini yakalayan özel Middleware metodu
     getHttpMiddleware() {
         return (req, res, next) => {
+            // Sağlık kontrollerini loglamayalım ki Grafana dolmasın
+            if (req.url === '/health' || req.url === '/api/logs') {
+                return next();
+            }
+
             this.logger.info({
                 message: `HTTP Request: ${req.method} ${req.url}`,
                 method: req.method,
                 path: req.url,
-                ip: req.ip,
-                user_agent: req.headers['user-agent']
+                ip: req.ip
             });
-            next(); // İsteği engellemeden devam ettir
+            next();
         };
     }
 }
-
 
 module.exports = new LoggerService();

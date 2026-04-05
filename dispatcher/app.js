@@ -2,42 +2,40 @@ const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const jwt = require('jsonwebtoken');
 const path = require('path');
-const mongoose = require('mongoose'); // Mükemmel izolasyon için eklendi
+const mongoose = require('mongoose');
 
+// GRAFANA POSTACIMIZI İÇERİ ALIYORUZ
+const loggerService = require('./logger.service');
 
 class DispatcherGateway {
     constructor() {
+       
         this.app = express();
         this.secret = process.env.JWT_SECRET || 'irem_secret_key';
+       
+        this.app.use(loggerService.getHttpMiddleware());
         
         // EKLENDİ: CORS ve JSON Parsing
-      
         this.app.use(express.json());
         
         // --- 1. DISPATCHER ÖZEL VERİTABANI BAĞLANTISI ---
-        const mongoUri = process.env.DISPATCHER_DB_URI || 'mongodb://dispatcher-db:27017/dispatcher_db';
+        const mongoUri = process.env.DISPATCHER_DB_URI || 'mongodb://dispatcher-db:27021/dispatcher_db';
         if (process.env.NODE_ENV !== 'test') {
             mongoose.connect(mongoUri)
                 .then(() => console.log("Dispatcher Özel DB Bağlantısı Başarılı ✅"))
                 .catch(err => console.error("Dispatcher DB Bağlantı Hatası ❌:", err));
         }
-        // --- 2. LOG ŞEMASI (İster 4.2 & 4.3 Uyumu) ---
-        // GÜNCELLENDİ: Koleksiyon ismi 'trafficlogs' olarak sabitlendi ve alanlar Dashboard'a uygun hale getirildi
+
+        // --- 2. LOG ŞEMASI ---
         this.LogModel = mongoose.model('TrafficLog', new mongoose.Schema({
             method: String,
-            endpoint: String, // 'path' yerine 'endpoint' yapıldı (Dashboard ile uyum için)
-            statusCode: Number, // 'status' yerine 'statusCode' yapıldı
-            responseTime: Number, // 'duration' yerine 'responseTime' yapıldı
+            endpoint: String, 
+            statusCode: Number, 
+            responseTime: Number, 
             timestamp: { type: Date, default: Date.now },
             clientIp: String
         }, { collection: 'trafficlogs' }));
-        //GRAFANA ILE ILGILI 
-const loggerService = require('./logger.service');
-// 2. Dispatcher'a gelen her isteği Grafana'ya gönderecek Middleware'i çalıştır
-app.use(loggerService.getHttpMiddleware());
-
-
-
+      
         this.SERVICES = {
             users: { 
                 target: process.env.USER_SERVICE_URL || 'http://user-service:3001', 
@@ -78,14 +76,13 @@ app.use(loggerService.getHttpMiddleware());
             next();
         });
 
-        // Detaylı Loglama Middleware
+        // Detaylı Loglama Middleware (Kendi Veritabanın İçin)
         this.app.use((req, res, next) => {
             const start = Date.now();
             res.on('finish', async () => {
                 const duration = Date.now() - start;
                 
                 // --- 3. LOGLARI KENDİ DB'SİNE KAYDETME ---
-                // EKLENDİ: /api/logs isteklerini loglama ki sonsuz döngü olmasın
                 if (process.env.NODE_ENV !== 'test' && !req.path.includes('/api/logs') && !req.path.includes('/dashboard')) {
                     try {
                         await this.LogModel.create({
@@ -126,7 +123,6 @@ app.use(loggerService.getHttpMiddleware());
         this.app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
 
         // --- 4. ARAYÜZ İÇİN CANLI LOG ENDPOINT ---
-        // GÜNCELLENDİ: '/dispatcher/logs' yerine Dashboard'un beklediği '/api/logs' yapıldı
         this.app.get('/api/logs', async (req, res) => {
             try {
                 const logs = await this.LogModel.find().sort({ timestamp: -1 }).limit(200);
@@ -158,7 +154,6 @@ app.use(loggerService.getHttpMiddleware());
                     proxyReq: (proxyReq, req) => {
                         if (req.user) proxyReq.setHeader('X-User-Info', JSON.stringify(req.user));
                         
-                        // fix: express.json() middleware consumes the body stream before the proxy relays it
                         if (req.body && Object.keys(req.body).length > 0 && req.method !== 'GET') {
                             const bodyData = JSON.stringify(req.body);
                             proxyReq.setHeader('Content-Type', 'application/json');

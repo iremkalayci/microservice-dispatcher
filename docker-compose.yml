@@ -49,8 +49,7 @@ services:
   dispatcher:
     build: ./dispatcher
     container_name: dispatcher
-    # ✅ DOĞRU YER BURASI: .env dosyasını buraya bağladık
-    env_file: ./dispatcher/.env 
+    env_file: ./dispatcher/.env
     ports:
       - "3000:3000"
     environment:
@@ -60,13 +59,14 @@ services:
       - PRODUCT_SERVICE_URL=http://product-service:3002
       - ORDER_SERVICE_URL=http://order-service:3004
       - JWT_SECRET=irem_secret_key
-      - LOKI_TOKEN=glc_eyJvIjoiMTcyMTQwOCIsIm4iOiJtaWNyb3NlcnZpY2UtZGlzcGF0Y2hlci1pcmVta2FsYXljaSIsImsiOiJzVGE1NEw4WjQ1MDcxd0VwMHFIWkxlMWoiLCJtIjp7InIiOiJwcm9kLWV1LWNlbnRyYWwtMCJ9fQ==
+      - LOKI_URL=http://loki:3100
     depends_on:
       - dispatcher-db
       - auth-service
       - user-service
       - product-service
       - order-service
+      - loki
     networks:
       - backend-network
 
@@ -115,6 +115,71 @@ services:
     networks:
       - backend-network
 
+  # ═══════════════════════════════════════════
+  #  İZLEME & TEST ARAÇLARI
+  # ═══════════════════════════════════════════
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=7d'
+    networks:
+      - backend-network
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/local-config.yaml
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - backend-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3030:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - loki
+    networks:
+      - backend-network
+
+  locust:
+    image: locustio/locust:latest
+    container_name: locust
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./locustfile.py:/home/locust/locustfile.py
+    command: -f /home/locust/locustfile.py --host=http://dispatcher:3000
+    depends_on:
+      - dispatcher
+    networks:
+      - backend-network
+
 networks:
   backend-network:
     driver: bridge
+
+volumes:
+  prometheus-data:
+  grafana-data:
+  loki-data:

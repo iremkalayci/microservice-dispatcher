@@ -7,25 +7,21 @@ class LoggerService {
             return LoggerService.instance;
         }
 
-        // Değişkenleri tanımlıyoruz
-        const LOKI_URL = 'https://logs-prod-039.grafana.net';
-        const LOKI_USER = '1541023';
-        // Şifreyi Docker/Environment üzerinden çekiyoruz (GitHub engeline takılmamak için)
-        const LOKI_TOKEN = process.env.LOKI_TOKEN; 
+        // Lokal Loki (Docker) veya fallback olarak Cloud
+        const LOKI_URL = process.env.LOKI_URL || 'http://loki:3100';
 
         this.logger = winston.createLogger({
             level: 'info',
             transports: [
                 new LokiTransport({
                     host: LOKI_URL,
-                    basicAuth: `${LOKI_USER}:${LOKI_TOKEN}`,
                     labels: { job: 'dispatcher-service' },
                     json: true,
                     batching: true, 
                     interval: 5,
                     timeout: 5000,
                     replaceTimestamp: true,
-                    onConnectionError: (err) => console.error('Loki Bağlantı Hatası Detayı:', err.message)
+                    onConnectionError: (err) => console.error('Loki Bağlantı Hatası:', err.message)
                 }),
                 new winston.transports.Console({
                     format: winston.format.combine(
@@ -49,8 +45,7 @@ class LoggerService {
 
     getHttpMiddleware() {
         return (req, res, next) => {
-            // Dashboard'un kendi isteklerini loglamıyoruz ki kalabalık olmasın
-            if (req.url === '/health' || req.url === '/api/logs' || req.url.includes('/dashboard')) {
+            if (req.url === '/health' || req.url === '/metrics' || req.url === '/api/logs' || req.url.includes('/dashboard')) {
                 return next();
             }
 
@@ -65,5 +60,4 @@ class LoggerService {
     }
 }
 
-// Singleton olarak dışarı aktar
 module.exports = new LoggerService();

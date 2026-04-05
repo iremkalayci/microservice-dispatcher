@@ -8,7 +8,7 @@
 | **Proje Adı** | Microservice Dispatcher (API Gateway) |
 | **Ekip Üyeleri** | İrem Kalaycı 231307047 Muhammed Ali Derindağ 231307053 |
 | **Tarih** | Nisan 2026 |
-| **Teknolojiler** | Node.js, Express.js, MongoDB, Docker, JWT, Locust |
+| **Teknolojiler** | Node.js, Express.js, MongoDB, Docker, JWT, Prometheus, Grafana, Loki, Locust |
 | **Repository** | [GitHub](https://github.com/iremkalayci/microservice-dispatcher) |
 
 ---
@@ -28,7 +28,8 @@ Bu projede, **API Gateway (Dispatcher)** pattern'i kullanılarak tüm dış iste
 - RESTful API tasarımı (Richardson Maturity Model Seviye 2)
 - Test-Driven Development (TDD) yaklaşımı
 - Docker ile konteynerizasyon ve sistem orkestrasyonu
-- Yük testi ve performans ölçümü
+- Prometheus + Grafana + Loki ile izleme ve log yönetimi
+- Yük testi ve performans ölçümü (Locust)
 
 ---
 
@@ -36,7 +37,7 @@ Bu projede, **API Gateway (Dispatcher)** pattern'i kullanılarak tüm dış iste
 
 ### 2.1 Mimari Genel Bakış
 
-Sistem, 1 API Gateway + 1 Auth Service + 3 İşlevsel Mikroservis + 5 Bağımsız MongoDB olmak üzere **10 Docker container**'dan oluşmaktadır.
+Sistem, 1 API Gateway + 1 Auth Service + 3 İşlevsel Mikroservis + 5 Bağımsız MongoDB + 4 İzleme & Test Aracı (Prometheus, Grafana, Loki, Locust) olmak üzere **14 Docker container**'dan oluşmaktadır.
 
 ```mermaid
 graph LR
@@ -59,9 +60,19 @@ graph LR
             PDB["🗄 product-db"]
             ODB["🗄 order-db"]
         end
+
+        subgraph Monitoring & Testing
+            Prometheus["📊 Prometheus<br/>:9090"]
+            Grafana["📈 Grafana<br/>:3030"]
+            Loki["📝 Loki<br/>(internal)"]
+            Locust["🦗 Locust<br/>:8089"]
+        end
     end
     
-    Client -->|":3000 (tek dışa açık port)"| Dispatcher
+    Client -->|":3000"| Dispatcher
+    Client -->|":3030"| Grafana
+    Client -->|":9090"| Prometheus
+    Client -->|":8089"| Locust
     Dispatcher -->|"/auth/*"| Auth
     Dispatcher -->|"/users/*"| Users
     Dispatcher -->|"/products/*"| Products
@@ -72,6 +83,12 @@ graph LR
     Users -.-> UDB
     Products -.-> PDB
     Orders -.-> ODB
+
+    Prometheus -->|"scrape /metrics"| Dispatcher
+    Dispatcher -->|"push logs"| Loki
+    Grafana -->|"query"| Prometheus
+    Grafana -->|"query"| Loki
+    Locust -->|"load test"| Dispatcher
 ```
 
 **Ağ İzolasyonu:** Sadece Dispatcher servisi dış dünyaya port açmaktadır (`:3000`). Mikroservisler yalnızca Docker iç ağında (`backend-network`) erişilebilirdir. Docker dışından doğrudan `user-service:3001` veya `product-service:3002`'ye erişim **mümkün değildir**.
@@ -243,6 +260,7 @@ Bu projede **Richardson Maturity Model Seviye 2** standartlarına uyulmuştur:
 | Servis | HTTP Metodu | URI | Açıklama | HTTP Durum Kodları |
 |--------|-------------|-----|----------|-------------------|
 | Dispatcher | GET | `/health` | Sağlık kontrolü | 200 |
+| Dispatcher | GET | `/metrics` | Prometheus metrikleri | 200 |
 | Dispatcher | GET | `/api/logs` | Trafik logları | 200, 500 |
 | Auth | POST | `/auth/register` | Kullanıcı kaydı | 201, 400 |
 | Auth | POST | `/auth/login` | Giriş & JWT token | 200, 401, 500 |
@@ -336,7 +354,7 @@ erDiagram
 
 ### 5.1 Docker Compose Yapısı
 
-Tüm sistem `docker-compose up --build` komutuyla tek seferde ayağa kalkmaktadır.
+Tüm sistem `docker-compose up --build` komutuyla tek seferde ayağa kalkmaktadır. Sistem **14 container**'dan oluşmaktadır:
 
 ```mermaid
 graph TD
@@ -353,40 +371,53 @@ graph TD
         UDB[(user-db)]
         PDB[(product-db)]
         ODB[(order-db)]
+
+        PROM["Prometheus:9090"]
+        GRAF["Grafana:3030"]
+        LOKI["Loki (Ic Ag)"]
+        LOC["Locust:8089"]
     end
     
     Client["Internet / Client"] --- Port3000["Port 3000"]
     Port3000 --> D
     
-    %% Erisim Kisitlamalari
-    Client -- "No Direct Access" --- A
-    Client -- "No Direct Access" --- U
+    Client -- "Port 3030" --> GRAF
+    Client -- "Port 9090" --> PROM
+    Client -- "Port 8089" --> LOC
     
-    %% Servis Yonlendirmeleri
     D --> A
     D --> U
     D --> P
     D --> O
     
-    %% Veritabani Baglantilari
     D --- DDB
     A --- ADB
     U --- UDB
     P --- PDB
     O --- ODB
+
+    PROM -->|"scrape"| D
+    D -->|"logs"| LOKI
+    GRAF --> PROM
+    GRAF --> LOKI
+    LOC -->|"load test"| D
 ```
 
-### 5.2 Ağ İzolasyonu
+### 5.2 Ağ İzolasyonu ve Port Yapısı
 
-| Servis | Dış Erişim | İç Ağ Erişimi | Port Mapping |
-|--------|-----------|---------------|-------------|
-| **Dispatcher** | ✅ Açık | ✅ | `3000:3000` |
-| Auth Service | ❌ Kapalı | ✅ | Yok |
-| User Service | ❌ Kapalı | ✅ | Yok |
-| Product Service | ❌ Kapalı | ✅ | Yok |
-| Order Service | ❌ Kapalı | ✅ | Yok |
+| Servis | Dış Erişim | İç Ağ Erişimi | Port Mapping | Açıklama |
+|--------|-----------|---------------|-------------|----------|
+| **Dispatcher** | ✅ Açık | ✅ | `3000:3000` | API Gateway — tek giriş noktası |
+| Auth Service | ❌ Kapalı | ✅ | Yok | JWT kimlik doğrulama |
+| User Service | ❌ Kapalı | ✅ | Yok | Kullanıcı yönetimi |
+| Product Service | ❌ Kapalı | ✅ | Yok | Ürün kataloğu |
+| Order Service | ❌ Kapalı | ✅ | Yok | Sipariş işleme |
+| **Grafana** | ✅ Açık | ✅ | `3030:3000` | İzleme dashboard'ları |
+| **Prometheus** | ✅ Açık | ✅ | `9090:9090` | Metrik toplama |
+| **Locust** | ✅ Açık | ✅ | `8089:8089` | Yük testi arayüzü |
+| **Loki** | ❌ Kapalı | ✅ | Yok | Log toplama (Grafana üzerinden erişim) |
 
-> **Not:** Mikroservislere Docker dışından doğrudan erişim mümkün değildir. Tüm istekler Dispatcher üzerinden proxy ile yönlendirilir.
+> **Not:** Mikroservislere Docker dışından doğrudan erişim mümkün değildir. Tüm istekler Dispatcher üzerinden proxy ile yönlendirilir. Loki'ye yalnızca Grafana üzerinden erişilir.
 
 ---
 
@@ -482,9 +513,13 @@ cd order-service && npm test
 
 ## 7. Performans ve Yük Testi
 
-### 7.1 Araç: Locust (Python)
+### 7.1 Araç: Locust (Docker Container)
 
-Yük testi, profesyonel bir araç olan **Locust** ile gerçekleştirilmiştir. Test senaryosu tüm servisleri kapsamaktadır:
+Yük testi, profesyonel bir araç olan **Locust** ile gerçekleştirilmiştir. Locust, diğer tüm servisler gibi **Docker container** olarak çalışmaktadır ve `docker-compose up` ile otomatik olarak ayağa kalkar.
+
+**Web Arayüzü:** http://localhost:8089
+
+Test senaryosu tüm servisleri kapsamaktadır:
 
 - Health check (`GET /health`)
 - JWT ile korunan endpointler (`GET /users`, `GET /products`)
@@ -493,17 +528,16 @@ Yük testi, profesyonel bir araç olan **Locust** ile gerçekleştirilmiştir. T
 
 ### 7.2 Test Komutu
 
+Locust web arayüzünden (`:8089`) test parametreleri girilebilir veya CLI ile headless mod kullanılabilir:
+
 ```bash
-# 50 eş zamanlı kullanıcı, 10/sn artış hızı, 30 saniye
+# Docker container olarak zaten çalışıyor, web UI'dan test başlatılabilir:
+# http://localhost:8089
+
+# Alternatif: Lokal kurulum ile headless mod
 locust -f locustfile.py --host=http://localhost:3000 --headless -u 50 -r 10 -t 30s
-
-# 100 eş zamanlı kullanıcı
 locust -f locustfile.py --host=http://localhost:3000 --headless -u 100 -r 20 -t 60s
-
-# 200 eş zamanlı kullanıcı
 locust -f locustfile.py --host=http://localhost:3000 --headless -u 200 -r 50 -t 60s
-
-# 500 eş zamanlı kullanıcı
 locust -f locustfile.py --host=http://localhost:3000 --headless -u 500 -r 100 -t 60s
 ```
 
@@ -583,21 +617,43 @@ Sistemin kırılma noktasını ve maksimum taşıma kapasitesini belirleyen fina
 
 ---
 
-## 8. Kullanıcı Arayüzü (Dashboard)
+## 8. Kullanıcı Arayüzü ve İzleme
+
+### 8.1 Dispatcher Dashboard
 
 Dispatcher servisi üzerinde `/dashboard` adresinden erişilebilen interaktif bir web arayüzü geliştirilmiştir:
 
-### Özellikler:
 - **API Endpoint Explorer:** Tüm servislerin endpoint'lerini görüntüleme ve test etme
 - **JWT Authorization Panel:** Token girişi ve hızlı register/login
 - **Mimari Diyagram:** Servis mimarisi görselleştirmesi
 - **Canlı Log Tablosu:** Dispatcher'a gelen tüm isteklerin gerçek zamanlı logları (MongoDB'den)
 - **Sunucu Durumu:** Anlık bağlantı durumu göstergesi
 
-### Erişim:
-```
-http://localhost:3000/dashboard
-```
+**Erişim:** http://localhost:3000/dashboard
+
+### 8.2 Grafana İzleme Dashboard'ları
+
+Grafana üzerinde otomatik olarak provision edilen **2 hazır dashboard** bulunmaktadır:
+
+| Dashboard | Veri Kaynağı | İçerik |
+|-----------|-------------|--------|
+| **🚀 Dispatcher API Gateway** | Prometheus | HTTP istek sayısı, aktif istekler, istek oranı (req/s), yanıt süresi dağılımı (p50/p90/p99), durum kodları, route bazlı analiz, Node.js bellek/event loop metrikleri |
+| **📝 Dispatcher Logları** | Loki | Canlı log akışı, log hacmi grafiği, hata log filtreleme |
+
+**Erişim:** http://localhost:3030 (Kullanıcı: `admin`, Şifre: `admin`)
+
+### 8.3 Prometheus Metrikleri
+
+Dispatcher servisi, `prom-client` kütüphanesi ile aşağıdaki özel metrikleri `/metrics` endpoint'inden sunmaktadır:
+
+| Metrik | Tip | Açıklama |
+|--------|-----|----------|
+| `http_requests_total` | Counter | Toplam HTTP istek sayısı (method, route, status_code etiketleri ile) |
+| `http_request_duration_seconds` | Histogram | HTTP istek süreleri (saniye cinsinden, percentile hesaplaması için) |
+| `http_active_requests` | Gauge | Anlık aktif HTTP istek sayısı |
+| Node.js varsayılan metrikler | Çeşitli | CPU, bellek, event loop, GC metrikleri |
+
+**Prometheus UI:** http://localhost:9090
 
 ---
 
@@ -612,12 +668,17 @@ http://localhost:3000/dashboard
 | **JWT (jsonwebtoken)** | Kimlik doğrulama |
 | **bcryptjs** | Parola hashleme |
 | **http-proxy-middleware** | Reverse proxy |
+| **prom-client** | Prometheus metrikleri (Node.js) |
+| **Winston + winston-loki** | Yapılandırılmış loglama & Loki entegrasyonu |
 | **Docker** | Konteynerizasyon |
 | **Docker Compose** | Orkestrasyon |
+| **Prometheus** | Metrik toplama ve izleme |
+| **Grafana** | İzleme dashboard'ları ve görselleştirme |
+| **Loki** | Log toplama ve sorgulama |
+| **Locust** | Yük testi aracı (Docker container) |
 | **Jest** | Test framework |
 | **Supertest** | HTTP test kütüphanesi |
 | **mongodb-memory-server** | In-memory test DB |
-| **Locust** | Yük testi aracı |
 
 ---
 
@@ -625,7 +686,7 @@ http://localhost:3000/dashboard
 
 ### Docker ile (Önerilen)
 ```bash
-# Tüm servisleri birlikte çalıştır
+# Tüm servisleri birlikte çalıştır (14 container)
 docker compose up --build -d
 
 # Durumu kontrol et
@@ -637,6 +698,18 @@ docker compose logs -f
 # Durdur
 docker compose down
 ```
+
+### Erişim Noktaları
+
+Sistem ayağa kalktıktan sonra aşağıdaki arayüzlere erişilebilir:
+
+| Servis | URL | Açıklama |
+|--------|-----|----------|
+| **Dispatcher API** | http://localhost:3000 | API Gateway — tüm istekler buradan |
+| **Dispatcher Dashboard** | http://localhost:3000/dashboard | İnteraktif API test arayüzü |
+| **Grafana** | http://localhost:3030 | İzleme dashboard'ları (`admin`/`admin`) |
+| **Prometheus** | http://localhost:9090 | Metrik sorgulama |
+| **Locust** | http://localhost:8089 | Yük testi web arayüzü |
 
 ### Lokal Geliştirme
 ```bash
@@ -696,13 +769,16 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 - ✅ Mikroservis mimarisi başarıyla uygulanmış ve 5 bağımsız servis geliştirilmiştir
 - ✅ API Gateway pattern ile merkezi yetkilendirme ve yönlendirme sağlanmıştır
-- ✅ Docker Compose ile tüm sistem tek komutla ayağa kalkmaktadır
+- ✅ Docker Compose ile tüm sistem (14 container) tek komutla ayağa kalkmaktadır
 - ✅ RMM Seviye 2 standartlarına uygun RESTful API tasarımı yapılmıştır
 - ✅ Her servis bağımsız MongoDB veritabanı kullanmaktadır (veri izolasyonu)
 - ✅ Kapsamlı test suite'i ile 105+ test senaryosu geliştirilmiştir
 - ✅ JWT tabanlı güvenli kimlik doğrulama sistemi kurulmuştur
 - ✅ İnteraktif Dashboard arayüzü ile API yönetimi sağlanmıştır
-- ✅ Locust ile profesyonel yük testi altyapısı oluşturulmuştur
+- ✅ Locust ile profesyonel yük testi altyapısı oluşturulmuştur (Docker container)
+- ✅ **Prometheus + Grafana** ile metrik tabanlı izleme sistemi kurulmuştur
+- ✅ **Loki** ile merkezi log toplama ve sorgulama altyapısı sağlanmıştır
+- ✅ Grafana üzerinde otomatik provision edilen hazır dashboard'lar oluşturulmuştur
 
 ### 12.2 Sınırlılıklar
 
@@ -710,12 +786,11 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 - Circuit breaker pattern desteklenmemektedir
 - Servisler arası asenkron iletişim (message queue) yoktur
 - API versiyonlama (v1, v2) yapılmamıştır
-- Centralized logging (ELK Stack) entegrasyonu yoktur
 
 ### 12.3 Olası Geliştirmeler
 
 - Redis cache katmanı eklenerek yanıt süreleri iyileştirilebilir
 - RabbitMQ/Kafka ile servisler arası event-driven iletişim kurulabilir
-- Grafana + Prometheus ile izleme dashboard'u eklenebilir
 - Kubernetes'e yükseltme ile otomatik ölçekleme sağlanabilir
 - HATEOAS desteği ile RMM Seviye 3'e çıkılabilir
+- Alertmanager entegrasyonu ile otomatik alarm sistemi eklenebilir

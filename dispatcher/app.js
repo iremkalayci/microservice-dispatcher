@@ -3,6 +3,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const mongoose = require('mongoose');
+const client = require('prom-client');
 
 // GRAFANA POSTACIMIZI İÇERİ ALIYORUZ
 const loggerService = require('./logger.service');
@@ -14,6 +15,31 @@ class DispatcherGateway {
         this.secret = process.env.JWT_SECRET || 'irem_secret_key';
        
         this.app.use(loggerService.getHttpMiddleware());
+
+        // --- PROMETHEUS METRICS ---
+        this.register = new client.Registry();
+        client.collectDefaultMetrics({ register: this.register });
+
+        this.httpRequestCount = new client.Counter({
+            name: 'http_requests_total',
+            help: 'Toplam HTTP istek sayısı',
+            labelNames: ['method', 'route', 'status_code'],
+            registers: [this.register]
+        });
+
+        this.httpRequestDuration = new client.Histogram({
+            name: 'http_request_duration_seconds',
+            help: 'HTTP istek süreleri (saniye)',
+            labelNames: ['method', 'route', 'status_code'],
+            buckets: [0.01, 0.05, 0.1, 0.3, 0.5, 1, 2, 5],
+            registers: [this.register]
+        });
+
+        this.activeRequests = new client.Gauge({
+            name: 'http_active_requests',
+            help: 'Aktif HTTP istek sayısı',
+            registers: [this.register]
+        });
         
         // EKLENDİ: CORS ve JSON Parsing
         this.app.use(express.json());
@@ -76,14 +102,22 @@ class DispatcherGateway {
             next();
         });
 
-        // Detaylı Loglama Middleware (Kendi Veritabanın İçin)
+        // Detaylı Loglama + Prometheus Metrics Middleware
         this.app.use((req, res, next) => {
             const start = Date.now();
+            this.activeRequests.inc();
+
             res.on('finish', async () => {
                 const duration = Date.now() - start;
+                const durationSec = duration / 1000;
+                const route = req.route ? req.route.path : req.path;
+
+                this.activeRequests.dec();
+                this.httpRequestCount.inc({ method: req.method, route, status_code: res.statusCode });
+                this.httpRequestDuration.observe({ method: req.method, route, status_code: res.statusCode }, durationSec);
                 
                 // --- 3. LOGLARI KENDİ DB'SİNE KAYDETME ---
-                if (process.env.NODE_ENV !== 'test' && !req.path.includes('/api/logs') && !req.path.includes('/dashboard')) {
+                if (process.env.NODE_ENV !== 'test' && !req.path.includes('/api/logs') && !req.path.includes('/dashboard') && !req.path.includes('/metrics')) {
                     try {
                         await this.LogModel.create({
                             method: req.method,
@@ -130,6 +164,12 @@ class DispatcherGateway {
             } catch (err) {
                 res.status(500).json({ error: "Loglar getirilemedi" });
             }
+        });
+
+        // --- PROMETHEUS METRICS ENDPOINT ---
+        this.app.get('/metrics', async (req, res) => {
+            res.set('Content-Type', this.register.contentType);
+            res.end(await this.register.metrics());
         });
 
         this.app.get('/health', (req, res) => {

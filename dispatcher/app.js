@@ -31,6 +31,12 @@ class DispatcherGateway {
             timestamp: { type: Date, default: Date.now },
             clientIp: String
         }, { collection: 'trafficlogs' }));
+        //GRAFANA ILE ILGILI 
+const loggerService = require('./logger.service');
+// 2. Dispatcher'a gelen her isteği Grafana'ya gönderecek Middleware'i çalıştır
+app.use(loggerService.getHttpMiddleware());
+
+
 
         this.SERVICES = {
             users: { 

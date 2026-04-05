@@ -16,7 +16,9 @@
     "express": "^5.2.1",
     "http-proxy-middleware": "^3.0.5",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.4.1"
+    "mongoose": "^9.4.1",
+    "winston": "^3.19.0",
+    "winston-loki": "^6.1.4"
   },
   "devDependencies": {
     "jest": "^30.3.0",

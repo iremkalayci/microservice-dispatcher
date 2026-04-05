@@ -339,14 +339,14 @@ erDiagram
 Tüm sistem `docker-compose up --build` komutuyla tek seferde ayağa kalkmaktadır.
 
 ```mermaid
-graph TB
-    subgraph "Docker Compose - backend-network"
-        D["dispatcher:3000<br/>🌍 Dış Porta Açık"]
+graph TD
+    subgraph "Docker Compose - Backend Network"
+        D["Dispatcher:3000 (Dis Porta Acik)"]
         
-        A["auth-service:3003<br/>🔒 Sadece İç Ağ"]
-        U["user-service:3001<br/>🔒 Sadece İç Ağ"]
-        P["product-service:3002<br/>🔒 Sadece İç Ağ"]
-        O["order-service:3004<br/>🔒 Sadece İç Ağ"]
+        A["auth-service:3003 (Ic Ag)"]
+        U["user-service:3001 (Ic Ag)"]
+        P["product-service:3002 (Ic Ag)"]
+        O["order-service:3004 (Ic Ag)"]
         
         DDB[(dispatcher-db)]
         ADB[(auth-db)]
@@ -355,17 +355,20 @@ graph TB
         ODB[(order-db)]
     end
     
-    Internet["🌐 İnternet / Client"] -->|"port 3000"| D
-    Internet -.x A
-    Internet -.x U
-    Internet -.x P
-    Internet -.x O
+    Client["Internet / Client"] --- Port3000["Port 3000"]
+    Port3000 --> D
     
+    %% Erisim Kisitlamalari
+    Client -- "No Direct Access" --- A
+    Client -- "No Direct Access" --- U
+    
+    %% Servis Yonlendirmeleri
     D --> A
     D --> U
     D --> P
     D --> O
     
+    %% Veritabani Baglantilari
     D --- DDB
     A --- ADB
     U --- UDB
@@ -516,6 +519,67 @@ locust -f locustfile.py --host=http://localhost:3000 --headless -u 500 -r 100 -t
 | `GET /products?search=Laptop` | 1 | Ürün arama (JWT gerekli) |
 | `POST /auth/login` | 1 | Giriş denemesi |
 | `GET /nonexistent` | 1 | 404 handler |
+## 7.4 Test Sonuçları ve Performans Analizi
+
+Sistemin yük altındaki davranışı; 50, 100, 200 ve 500 eş zamanlı kullanıcı (VU) senaryoları ile Locust üzerinden test edilmiştir.
+
+### 7.4.1 Baseline Testi (50 VU)
+Sistemin temel çalışma performansını ve tepki sürelerini ölçmek için yapılan başlangıç testidir.
+
+![50 VU Statistics Table](./assets/locust_50_table.png)
+*Tablo 4: 50 VU yük altında servis bazlı detaylı performans verileri.*
+
+**Tablo Analizi:** 50 kullanıcıda sistem **40ms median** ve **120ms average** değerleri ile son derece hızlıdır. 7513 istekte **0 hata** alınması, mikroservislerin düşük yükte kusursuz senkronize olduğunu kanıtlar.
+
+![50 VU Performance Charts](./assets/locust_50vu.png)
+*Şekil 8: 50 VU yük altında RPS ve Yanıt Süresi grafiği.*
+
+**Grafik Analizi:** Grafikte görülen ilk sıçrama (spike), sistemin "Warm-up" sürecidir. Bu süreçten sonra yanıt süresi çizgileri (sarı ve mor) tabana yapışarak sistemin kararlı hale ulaştığını göstermiştir.
+
+---
+
+### 7.4.2 Normal Yük Testi (100 VU)
+Sistemin gerçek dünya trafiğine yakın bir yoğunluktaki tepkisini ölçme aşamasıdır.
+
+![100 VU Statistics Table](./assets/locust_100_table.png)
+*Tablo 5: 100 VU yük altında servis bazlı performans verileri.*
+
+**Tablo Analizi:** 100 kullanıcıda sistemin **success rate** oranı **%99.85** olarak ölçülmüştür. 5463 istekte gelen 8 anlık hata, sistemin ilk yoğun yükle karşılaşma anındaki kaynak tahsisatından kaynaklanmıştır.
+
+![100 VU Performance Charts](./assets/locust_100vu.png)
+*Şekil 9: 100 VU yük altında sistemin kararlı hal grafiği.*
+
+**Grafik Analizi:** 100 kullanıcı seviyesinde RPS değerinin (yeşil çizgi) stabil artışı, Dispatcher (API Gateway) ünitesinin yükü mikroservisler arasında başarıyla dağıttığını göstermektedir.
+
+---
+
+### 7.4.3 Yoğun Yük Testi (200 VU)
+Sistemin yüksek trafik altında kendini nasıl optimize ettiğini ölçen "Scale-up" testidir.
+
+![200 VU Statistics Table](./assets/locust_200_table.png)
+*Tablo 6: 200 VU yük altında servis bazlı performans verileri.*
+
+**Tablo Analizi:** İlginç bir bulgu olarak, 200 kullanıcıda hata oranı tekrar **%0**'a düşmüştür. Bu durum, sistemin ısındıktan sonra (warming-up) 200 kullanıcıyı bile kayıpsız yönetebildiğini ispatlar.
+
+![200 VU Performance Charts](./assets/locust_200vu.png)
+*Şekil 10: 200 VU yük altında sistemin performans eğrisi.*
+
+**Grafik Analizi:** Kullanıcı sayısı 200'de sabitlendiğinde yanıt sürelerinin dalgalanmadan devam etmesi, Docker üzerindeki NoSQL ve Mikroservis konteynerlarının kaynak yönetimindeki başarısını yansıtır.
+
+---
+
+### 7.4.4 Stres Testi (500 VU)
+Sistemin kırılma noktasını ve maksimum taşıma kapasitesini belirleyen final testidir.
+
+![500 VU Statistics Table](./assets/locust_500_table.png)
+*Tablo 7: 500 VU yük altında maksimum stres verileri.*
+
+**Tablo Analizi:** 500 kullanıcıda 16.683 istekte **sıfır hata** alınması projenin en büyük başarısıdır. Yanıt sürelerindeki artış (7.5sn ortalama), sistemin "çökmediğini" (crash), sadece kaynak yetersizliğinden yavaşladığını kanıtlar.
+
+![500 VU Performance Charts](./assets/locust_500vu.png)
+*Şekil 11: 500 VU yük altında sistemin stres sınırı grafiği.*
+
+**Grafik Analizi:** 500 kullanıcıda RPS çizgisi (yeşil) doyum noktasına ulaşmıştır. Bu grafik, sistemin "Graceful Degradation" (zarif yavaşlama) prensibiyle çalıştığını ve servis sürekliliğini her ne pahasına olursa olsun koruduğunu gösterir.
 
 ---
 

@@ -6,7 +6,7 @@
 | Bilgi | Değer |
 |-------|-------|
 | **Proje Adı** | Microservice Dispatcher (API Gateway) |
-| **Ekip Üyeleri** | İrem Kalaycı 231307047 | Muhammed Ali Derindağ 231307053 |
+| **Ekip Üyeleri** | İrem Kalaycı 231307047 Muhammed Ali Derindağ 231307053 |
 | **Tarih** | Nisan 2026 |
 | **Teknolojiler** | Node.js, Express.js, MongoDB, Docker, JWT, Locust |
 | **Repository** | [GitHub](https://github.com/iremkalayci/microservice-dispatcher) |

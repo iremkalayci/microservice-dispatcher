@@ -1,6 +1,6 @@
 services:
   # ═══════════════════════════════════════════
-  #  VERİTABANLARI (Dışarıya port açıyoruz ki Compass bağlansın)
+  #  VERİTABANLARI
   # ═══════════════════════════════════════════
   dispatcher-db:
     image: mongo:latest
@@ -49,6 +49,8 @@ services:
   dispatcher:
     build: ./dispatcher
     container_name: dispatcher
+    # ✅ DOĞRU YER BURASI: .env dosyasını buraya bağladık
+    env_file: ./dispatcher/.env 
     ports:
       - "3000:3000"
     environment:
@@ -58,6 +60,7 @@ services:
       - PRODUCT_SERVICE_URL=http://product-service:3002
       - ORDER_SERVICE_URL=http://order-service:3004
       - JWT_SECRET=irem_secret_key
+      - LOKI_TOKEN=glc_eyJvIjoiMTcyMTQwOCIsIm4iOiJtaWNyb3NlcnZpY2UtZGlzcGF0Y2hlci1pcmVta2FsYXljaSIsImsiOiJzVGE1NEw4WjQ1MDcxd0VwMHFIWkxlMWoiLCJtIjp7InIiOiJwcm9kLWV1LWNlbnRyYWwtMCJ9fQ==
     depends_on:
       - dispatcher-db
       - auth-service

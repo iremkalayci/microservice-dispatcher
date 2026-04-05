@@ -7,9 +7,11 @@ class LoggerService {
             return LoggerService.instance;
         }
 
+        // Değişkenleri tanımlıyoruz
         const LOKI_URL = 'https://logs-prod-039.grafana.net';
         const LOKI_USER = '1541023';
-        const LOKI_TOKEN = 'glc_eyJvIjoiMTcyMTQwOCIsIm4iOiJtaWNyb3NlcnZpY2UtZGlzcGF0Y2hlci1pcmVta2FsYXljaSIsImsiOiJzVGE1NEw4WjQ1MDcxd0VwMHFIWkxlMWoiLCJtIjp7InIiOiJwcm9kLWV1LWNlbnRyYWwtMCJ9fQ==';
+        // Şifreyi Docker/Environment üzerinden çekiyoruz (GitHub engeline takılmamak için)
+        const LOKI_TOKEN = process.env.LOKI_TOKEN; 
 
         this.logger = winston.createLogger({
             level: 'info',
@@ -19,14 +21,11 @@ class LoggerService {
                     basicAuth: `${LOKI_USER}:${LOKI_TOKEN}`,
                     labels: { job: 'dispatcher-service' },
                     json: true,
-                    // 🔥 BURASI KRİTİK: Bağlantı hatalarını engellemek için ekledik
                     batching: true, 
-                    interval: 5, // Logları 5 saniyede bir toplu gönder (Sistemi yormaz)
-                    timeout: 5000, // 5 saniye içinde cevap gelmezse zorlama
+                    interval: 5,
+                    timeout: 5000,
                     replaceTimestamp: true,
-                    onConnectionError: (err) => {
-                        console.error('Loki Bağlantı Hatası Detayı:', err.message);
-                    }
+                    onConnectionError: (err) => console.error('Loki Bağlantı Hatası Detayı:', err.message)
                 }),
                 new winston.transports.Console({
                     format: winston.format.combine(
@@ -50,8 +49,8 @@ class LoggerService {
 
     getHttpMiddleware() {
         return (req, res, next) => {
-            // Sağlık kontrollerini loglamayalım ki Grafana dolmasın
-            if (req.url === '/health' || req.url === '/api/logs') {
+            // Dashboard'un kendi isteklerini loglamıyoruz ki kalabalık olmasın
+            if (req.url === '/health' || req.url === '/api/logs' || req.url.includes('/dashboard')) {
                 return next();
             }
 
@@ -66,4 +65,5 @@ class LoggerService {
     }
 }
 
+// Singleton olarak dışarı aktar
 module.exports = new LoggerService();
